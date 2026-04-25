@@ -1,5 +1,5 @@
 ---
-title: 'A Modular Computational Framework for Section 2 Voting Rights Act Analysis' 
+title: "A Modular Computational Framework for $\S2$ Voting Rights Act Analysis" 
 subtitle: "Spring 2026 SoReMo Fellowship Project Final Technical Report"
 author: 
   - Alicia  Guerra, Illinois Institute of Technology^[[Contact the author](mailto:aguerra@hawk.illinoistech.edu).] 
@@ -20,32 +20,30 @@ Write your abstract in plain English. Why did you do this project? What did it a
 
 # Introduction
 
-Tell us more about the *context* of your project. Make sure to cite other work on which you're building. Line breaks do not matter unless there is a blank line between two lines of text - then it's a new paragraph,
-
-like it just happened here.
-
 # Related Work
 
-# Future work
+## Redistricting Data Preparation
 
-What might be a cool followup to this project? how would you imagine its impact?
+### Constructing Racial Categories
 
-# Executive summary, or action proposal
+In this paper, the Data and Democracy Lab's conventions for constructing demographic categories are adopted.
 
-Specific things you propose to be done, action items as a direct result of your project; *or* specific outcomes already observed. The project's impact on key stakeholders, whom you've clearly identified.
+Their convention for categorizing racial groups inolves adopting these group names in the ensuing order: Black, Hispanic, Asian, Other,and White [@mggg_vap_cvap].
+
+It is emphasized that anyone who identifies as black should be grouped into the black population [@mggg_vap_cvap]. In other words, the black population should encompass those who are "Any-Part Black" or "Black Alone or in Combination", as opposed to just "Black Alone" or "Single-Race Black" [@mggg_vap_cvap].
+
+Then, of the individuals left, the Hispanic population must encompass all individuals who identify as Hispanic in the same way the Black population does [@mggg_vap_cvap]. Next, of those left, the Asian population should capture all who identify as Asian or Native Hawaiin Pacific Islander, so as to represent an AAPI category [@mggg_vap_cvap]. Finally, the same logic is used to construct the AMIN, Other, and White categories [@mggg_vap_cvap].
+
+Thereafter, source data:pl94 in Section sec:datasources is leveraged to generate voting age population as sums of census variables [@mggg_vap_cvap].
+
+# The Framework
+
+## Data Engineering Layer
 
 # License
 
-The template was created for publication in [SoReMo](http://journals.library.iit.edu/index.php/Soremo/).
-
-Authors of the reports retain copyright of their work.
-
-This document is created by [Sonja Petrovic](www.sonjapetrovicstats.com) for [SoReMo](www.soremo.org) and is released under the same licence as the parent [folder](https://sondzus.github.io/SoReMo/) on Github.
+The authors retains copyright of their work.
 
 # Acknowledgements
 
-Optional section. The Acknowledgements should contain text acknowledging non-author contributors. Acknowledgements should be brief, and should not include thanks to anonymous referees and editors or effusive comments. If applicable, additional grant numbers or supporting agencies may be acknowledged.
-
 # References
-
-If you are able to knit your own HTML/PDF from Markdown, leave this section blank. The bibliography will be created from your file `mybiblio.bib.` If you are uncomfortable, add your references here in style as close to BibTex as possible, and the editors will help with the rest.

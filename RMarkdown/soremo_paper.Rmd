@@ -20,6 +20,18 @@ Write your abstract in plain English. Why did you do this project? What did it a
 
 # Introduction
 
+## The Legality of Negative Racial Gerrymandering
+
+Negative racial gerrymandering is illegal in the United States by virtue of the Equal Protection Clause of the Fourteenth Ammendment and Section 2 of the Voting Rights Act.
+
+The Equal Protection Clause of the Fourteenth Ammendment forbids denying anyone of "equal protections of the law" [@USConst14].
+
+Section 2 of the Voting Rights Act of 1965 precludes states and political entities from wielding any "standard, practice, or procedure" to curtail the voting rights of any U.S. citizen based on race [@vra1965_sec2]. In the 1986 case of Thornburg v. Gingles, it was ruled that a North Carolina redistricting plan was in violation of Section 2 of the Voting Rights Act for engaging in negative racial gerrymandering practices - more specifically, of diluting the votes of black citizens [@thornburg1986gingles]. This landmark Supreme Court case decided that minority voters can legally challenge negative racial gerrymandering practices in redistricting plans on the grounds of violating Section 2 of the Voting Rights Act, but that the burden of proof is on them to demonstrate that their capacity to elect their preferred candidates is undermined [@thornburg1986gingles].
+
+In the Thornburg v. Gingles case, the Supreme Court established a framework for minority voters to be able to prove negative racial gerrymandering in violation of Section 2 of the Voting Rights Act in a court of law [@thornburg1986gingles]. Under this framework, plantiffs must be able to prove the following: (1) a "geographically insular" minority group makes up the majority population of a district, (2) the minority group is "politically cohesive", and (3) the "bloc voting majority" is usually able to defeat the minority group's preferred candidates [@thornburg1986gingles]. The second and third preconditions are stated by the U.S. Supreme Court as concerning "racially polarized voting" [@allen_milligan_2023].
+
+The U.S. Supreme Court refers to this framework as "the Gingles framework" [@allen_milligan_2023]. For the last 40 years, claims of negative racial gerrymandering in violation of Section 2 of the Voting Rights Act have been assessed via the Gingles framework [@allen_milligan_2023]. In the 2023 Allen v. Milligan decision, the U.S. Supreme Court reaffirmed the validity of the Gingles framework [@allen_milligan_2023].
+
 # Related Work
 
 ## Redistricting Data Preparation

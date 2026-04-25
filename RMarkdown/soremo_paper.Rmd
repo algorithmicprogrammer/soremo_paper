@@ -28,7 +28,7 @@ Write your abstract in plain English. Why did you do this project? What did it a
 
 In this paper, the Data and Democracy Lab's conventions for constructing demographic categories are adopted.
 
-Their convention for categorizing racial groups inolves adopting these group names in the ensuing order: Black, Hispanic, Asian, Other,and White [@mggg_vap_cvap].
+Their convention for categorizing racial groups involves adopting these group names in the ensuing order: Black, Hispanic, Asian, Other,and White [@mggg_vap_cvap].
 
 It is emphasized that anyone who identifies as black should be grouped into the black population [@mggg_vap_cvap]. In other words, the black population should encompass those who are "Any-Part Black" or "Black Alone or in Combination", as opposed to just "Black Alone" or "Single-Race Black" [@mggg_vap_cvap].
 
@@ -40,10 +40,23 @@ Thereafter, source <data:pl94> in Section sec:datasources is leveraged to genera
 
 ## Data Engineering Layer
 
+### Data Sources
+
+1.  State District Plan Shapefile
+2.  Decennial Census PL 94-171 Redistricting Dataset
+3.  Citizen Voting Age Population by Race and Ethnicity in a Special Tabulation from the ACS 5-Year Estimates
+4.  State Census Blocks Shapefile (TIGER/LINE)
+5.  State Voting Tabulation District Shapefile
+6.  State VTDs Election Data
+
+# Case Study: Texas Congressional Districts
+
 # License
 
 The authors retains copyright of their work.
 
 # Acknowledgements
+
+I am indebted to the SoReMo Initiative at my home institution, Illinois Institute of Technology, for funding my research. Dr. Sonja Petrović, founder of the SoReMo Initiative, has provided invaluable statistical insights. Dr. Robert Ellis, my advisor, has provided candid and thorough throughout the formulation of this paper. Dr. Shahrzad (Sara) Jamshidi, my statistics professor, was instrumental in helping me get this project off the ground.
 
 # References

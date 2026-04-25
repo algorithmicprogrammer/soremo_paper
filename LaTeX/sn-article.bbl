@@ -1,0 +1,90 @@
+\begin{thebibliography}{10}
+\providecommand{\doi}[1]{\url{https://doi.org/#1}}
+\bibcommenthead
+
+\bibitem{EckmanWhitaker2025MidDecade}
+Eckman SJ, Whitaker LP.
+\newblock Mid-decade Congressional Redistricting: Key Issues.
+\newblock Congressional Research Service; 2025. IF13082.
+\newblock Library of Congress.
+\newblock Available from: \url{https://www.congress.gov/crs-product/IF13082}.
+
+\bibitem{Duchin2023PoliticalGeometry}
+Duchin M, Walch O, editors.
+\newblock Political Geometry: Rethinking Redistricting in the US with Math, Law, and Everything in Between.
+\newblock Birkhäuser; 2022.
+
+\bibitem{deford2021recombination}
+DeFord D, Duchin M, Solomon J.
+\newblock Recombination: A Family of Markov Chains for Redistricting.
+\newblock Harvard Data Science Review. 2021;3(1).
+\newblock \doi{10.1162/99608f92.4c6d50b1}.
+
+\bibitem{Shaw1993}
+{Supreme Court of the United States}.: {Shaw v. Reno}.
+
+\bibitem{Miller1995}
+{Supreme Court of the United States}.: {Miller v. Johnson}.
+
+\bibitem{Bush1996}
+{Supreme Court of the United States}.: {Bush v. Vera}.
+
+\bibitem{USConst14}
+{United States}.: {U.S. Constitution, Amendment XIV, Section 1}.
+
+\bibitem{vra1965_sec2}
+: {Voting Rights Act of 1965, Section 2}.
+\newblock 52 U.S.C. § 10301.
+
+\bibitem{thornburg1986gingles}
+{Supreme Court of the United States}.: {Thornburg v. Gingles}.
+\newblock 478 U.S. 30.
+
+\bibitem{allen_milligan_2023}
+{Supreme Court of the United States}.: {Allen v. Milligan}.
+\newblock 599 U.S. 1.
+
+\bibitem{mggg_vap_cvap}
+{Donnay, M  and Duchin, M  and Rock, P }.: Conventions for Consturcting Demographic Categories.
+\newblock Accessed: 2026-04-13.
+\newblock Available from: \url{{https://mggg.org/vap-cvap}}.
+
+\bibitem{BeckerDuchinGoldHirsch2021}
+Becker A, Duchin M, Gold D, Hirsch S.
+\newblock Computational Redistricting and the Voting Rights Act.
+\newblock Election Law Journal: Rules, Politics, and Policy. 2021;20(4):407--441.
+\newblock \doi{10.1089/elj.2020.0704}.
+
+\bibitem{king2004ecological}
+King G, Rosen O, Tanner M.
+\newblock Ecological Inference: New Methodological Strategies.
+\newblock Cambridge University Press; 2004.
+
+\bibitem{freedman1999ecological}
+Freedman DA.
+\newblock Ecological Regression and Voting Rights.
+\newblock Evaluation Review. 1999;23(4):328--342.
+\newblock \doi{10.1177/0193841X9902300401}.
+
+\bibitem{alexander2024}
+: Alexander v. South Carolina State Conference of the NAACP, 602 U.S.
+\newblock U.S. Supreme Court.
+
+\bibitem{cooper2017}
+: Cooper v. Harris, 581 U.S. 285.
+\newblock U.S. Supreme Court.
+
+\bibitem{bethunehill2017}
+: Bethune-Hill v. Virginia State Board of Elections, 580 U.S. 178.
+\newblock U.S. Supreme Court.
+
+\bibitem{abbott2018}
+: Abbott v. Perez, 585 U.S. 579.
+\newblock U.S. Supreme Court.
+
+\bibitem{king1999binomial_beta_ei}
+King G, Rosen O, Tanner MA.
+\newblock Binomial-Beta Hierarchical Models for Ecological Inference.
+\newblock Sociological Methods \& Research. 1999;28(1):61--90.
+
+\end{thebibliography}

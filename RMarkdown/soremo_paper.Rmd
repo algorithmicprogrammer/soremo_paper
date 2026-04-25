@@ -1,5 +1,5 @@
 ---
-title: "A Modular Computational Framework for $\S2$ Voting Rights Act Analysis" 
+title: "A Modular Computational Framework for Section 2 Voting Rights Act Analysis" 
 subtitle: "Spring 2026 SoReMo Fellowship Project Final Technical Report"
 author: 
   - Alicia  Guerra, Illinois Institute of Technology^[[Contact the author](mailto:aguerra@hawk.illinoistech.edu).] 
@@ -34,7 +34,7 @@ It is emphasized that anyone who identifies as black should be grouped into the 
 
 Then, of the individuals left, the Hispanic population must encompass all individuals who identify as Hispanic in the same way the Black population does [@mggg_vap_cvap]. Next, of those left, the Asian population should capture all who identify as Asian or Native Hawaiin Pacific Islander, so as to represent an AAPI category [@mggg_vap_cvap]. Finally, the same logic is used to construct the AMIN, Other, and White categories [@mggg_vap_cvap].
 
-Thereafter, source data:pl94 in Section sec:datasources is leveraged to generate voting age population as sums of census variables [@mggg_vap_cvap].
+Thereafter, source <data:pl94> in Section sec:datasources is leveraged to generate voting age population as sums of census variables [@mggg_vap_cvap].
 
 # The Framework
 

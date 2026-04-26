@@ -63,12 +63,18 @@ Thereafter, source <data:pl94> in Section sec:datasources is leveraged to genera
 
 # Case Study: Texas Congressional Districts
 
+## Data Engineering Layer Implementation
+
+## Ecological Inference Layer Implementation
+
+![The highest and lowest EI point estimates for each racial group's support of the 3 Democratic nominees in statewide general elections: White (19–24%), AMIN (63–74%), Hispanic (66–72%), Asian (88–90%), and Black (95–96%).](figures/ei_dem_support_ranges.png)
+
 # License
 
 The authors retains copyright of their work.
 
 # Acknowledgements
 
-I am indebted to the SoReMo Initiative at my home institution, Illinois Institute of Technology, for funding my research. Dr. Sonja Petrović, founder of the SoReMo Initiative, has provided invaluable statistical insights. Dr. Robert Ellis, my advisor, has provided candid and thorough throughout the formulation of this paper. Dr. Shahrzad (Sara) Jamshidi, my statistics professor, was instrumental in helping me get this project off the ground.
+I am indebted to the SoReMo Initiative at my home institution, Illinois Institute of Technology, for funding my research. Dr. Sonja Petrović, founder of the SoReMo Initiative, has provided invaluable statistical insights. Dr. Robert Ellis, my advisor, has provided candid and thorough feedback throughout the formulation of this paper. Dr. Shahrzad (Sara) Jamshidi, my former statistical learning and Bayesian statistics professor, was instrumental in helping me get this project off the ground.
 
 # References

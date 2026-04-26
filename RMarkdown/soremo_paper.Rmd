@@ -22,9 +22,9 @@ Write your abstract in plain English. Why did you do this project? What did it a
 
 ## The Legality of Negative Racial Gerrymandering
 
-Negative racial gerrymandering is illegal in the United States by virtue of the Equal Protection Clause of the Fourteenth Ammendment and Section 2 of the Voting Rights Act.
+Negative racial gerrymandering is illegal in the United States by virtue of the Equal Protection Clause of the Fourteenth Amendment and Section 2 of the Voting Rights Act.
 
-The Equal Protection Clause of the Fourteenth Ammendment forbids denying anyone of "equal protections of the law" [@USConst14].
+The Equal Protection Clause of the Fourteenth Amendment forbids denying anyone of "equal protections of the law" [@USConst14].
 
 Section 2 of the Voting Rights Act of 1965 precludes states and political entities from wielding any "standard, practice, or procedure" to curtail the voting rights of any U.S. citizen based on race [@vra1965_sec2]. In the 1986 case of Thornburg v. Gingles, it was ruled that a North Carolina redistricting plan was in violation of Section 2 of the Voting Rights Act for engaging in negative racial gerrymandering practices - more specifically, of diluting the votes of black citizens [@thornburg1986gingles]. This landmark Supreme Court case decided that minority voters can legally challenge negative racial gerrymandering practices in redistricting plans on the grounds of violating Section 2 of the Voting Rights Act, but that the burden of proof is on them to demonstrate that their capacity to elect their preferred candidates is undermined [@thornburg1986gingles].
 

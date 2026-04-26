@@ -48,6 +48,22 @@ Then, of the individuals left, the Hispanic population must encompass all indivi
 
 Thereafter, source <data:pl94> in Section sec:datasources is leveraged to generate voting age population as sums of census variables [@mggg_vap_cvap].
 
+Subsequently, Source \ref{data:cvap} in Section\~\ref{sec:datasources} is analyzed. The problem is, CVAP data from the ACS must be analyzed at the census block level because the base unit of the Decennial Census PL 94-171 data is the census block. In the primary tables, ACS is reported at the census tract level, which presents a problem because that is a significantly higher level of aggregation than the census block [@mggg_vap_cvap].
+
+Fortunately, the Data and Democracy Lab has introduced a solution to this problem called "discounting" [@mggg_vap_cvap]. Discounting refers to the usage of the tract-level ACS data to estimate the citizenship rates of racial groups, then applying the discount to the voting age population [@mggg_vap_cvap].
+
+An example of "discounting" provided by the Data and Democracy Lab is depicted in Equation\~\ref{eq:discounting}; in this example, block X belongs to tract Y in state Z and BCVAP is estimated by taking the citizenship rate for the group in the tract and applying it to the voting ager population in the block [@mggg_vap_cvap]. $$
+\frac{BCVAP_{ACS}(tract \: Y)}{BVAP_{ACS}(tract \: Y)} \times BVAP_{PL}(block \: X) = BCVAP(block \: X)
+$$
+
+If the denominator in an equation like Equation\~\ref{eq:discounting} is too low, then the Data and Democracy Lab proposes a solution like that in Equation\~\ref{eq:discounting_fix}. This involves swapping in the citizenship rate given that the tract did not allow for a meaningful estimate [@mggg_vap_cvap].
+
+$$
+\frac{BCVAP_{ACS}(state \: Z)}{BVAP_{ACS}(state \: Z)} \times BVAP_{PL}(block \: X) = BCVAP(block \: X)
+$$
+
+The Data and Democracy Lab acknowledges that this is a "crude fix", but states that they intend to release a "more sophisticated" Bayesian method to address this in the future [@mggg_vap_cvap].
+
 # The Framework
 
 ## Data Engineering Layer

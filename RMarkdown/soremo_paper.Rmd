@@ -64,6 +64,22 @@ $$
 
 The Data and Democracy Lab acknowledges that this is a "crude fix", but states that they intend to release a "more sophisticated" Bayesian method to address this in the future [@mggg_vap_cvap].
 
+## Ecological Inference
+
+To reiterate what is stated in $\S$\~\ref{sec:legality}, in order to prove a violation of $\S2$ of the Voting Rights Act under the Gingles framework,plaintiffs must prove that the majority votes as a bloc to defeat minority-preferred candidates [@thornburg1986gingles]. Hence, any framework performing $\S2$ Voting Rights Act analysis must encompass identification of minority-preferred political candidates [@BeckerDuchinGoldHirsch2021].
+
+In state election return datasets, vote totals for political candidates are not computed by race, meaning that direct computation of minority-preferred candidates is impossible [@BeckerDuchinGoldHirsch2021]. This is where ecological inference - the de-facto solution for determining racially polarized voting - comes in. After all, ecological inference is widely regarded as "the best and often only hope of making progress" when it comes to extracting clues about individual behavior from group or aggregate-level data [@king2004ecological].
+
+Ecological inference (and ecological regression, its simpler predecessor) is considered a "statistical mainstay" in $\S2$ Voting Rights Act litigation [@freedman1999ecological]. U.S. Supreme Court redistricting cases in which lower-court findings relying on ecological inference were reviewed and accepted without methodological objection include Allen v. Milligan [@allen_milligan_2023], Alexander v. State Carolina State Conference of the NAACP [@alexander2024], Cooper v. Harris [@cooper2017], Bethune-Hill v. Virginia State Board of Elections [@bethunehill2017], and Abbott v. Perez [@abbott2018].
+
+It should be noted, however, that in the same way all statistical inference techniques with missing data give way to uncertainty, ecological inference produces "imperfect" and "uncertain" answers [@BeckerDuchinGoldHirsch2021]. Hence, it is essential to estimate the error produced by ecological inference techniques and observe how it compounds or cancels out in high-level conclusions [@BeckerDuchinGoldHirsch2021].So, in addition to identifying the minority-preferred candidates, one must specify the confidence measures that the identifications are correct [@BeckerDuchinGoldHirsch2021]. To check for minority control of a district and identify preferred candidates for newly proposed districts, the statewide and precinct-level vote estimates by race should be leveraged [@BeckerDuchinGoldHirsch2021].
+
+Becker et al. [@BeckerDuchinGoldHirsch2021] implement a version of King's ecological inference, specifically the ei.mD.bayes function from eiPack which is based on the Bayesian hierarchical Dirichlet model for $R \times C$ tables proposed by King et al. in 1999 [@king1999binomial_beta_ei].
+
+For each election, EI is run at the statewide level using precinct-level input tables [@BeckerDuchinGoldHirsch2021]. The inputs for each precinct are the row and column sums for the $R \times C$ table of vote counts. The row sums correspond to the precinct's estimated number of adult citizens in each racial group. The column sums are the precinct's vote totals for each candidate [@BeckerDuchinGoldHirsch2021].
+
+Each ecological inference run generates a large random sample of estimated vote counts; in order to obtain the statewide estimates, these values are summed across the entire state [@BeckerDuchinGoldHirsch2021]. For each racial group, the candidate with the highest average estimated vote total for an election is the preferred candidate [@BeckerDuchinGoldHirsch2021]. In order to obtain a measure of confidence for the a candidate was correctly identified as the preferred candidate, repeated draws for the ecological inference distribution are obtained and the frequency by which the preferred candidate receives the most votes is recorded [@BeckerDuchinGoldHirsch2021].
+
 # The Framework
 
 ## Data Engineering Layer

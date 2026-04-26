@@ -4,14 +4,16 @@ subtitle: "Spring 2026 SoReMo Fellowship Project Final Technical Report"
 author: 
   - Alicia  Guerra, Illinois Institute of Technology^[[Contact the author](mailto:aguerra@hawk.illinoistech.edu).] 
 output:
-  pdf_document: 
+  pdf_document:
     toc: true
     toc_depth: 1
     fig_width: 2
     fig_caption: true
+    citation_package: natbib
 urlcolor: cyan
 linkcolor: cyan
 bibliography: mybiblio.bib
+biblio-style: unsrtnat
 ---
 
 # Abstract

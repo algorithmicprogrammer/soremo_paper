@@ -65,6 +65,18 @@ Thereafter, source <data:pl94> in Section sec:datasources is leveraged to genera
 
 ## Data Engineering Layer Implementation
 
+**Table : Texas Demographics**
+
+| Racial Group    | Share of Total Population | Share of VAP | Share of CVAP |
+|-----------------|---------------------------|--------------|---------------|
+| Hispanic        | 34.7%                     | 35.6%        | 32.6%         |
+| Black           | 13.5%                     | 13.0%        | 12.9%         |
+| White           | 46.2%                     | 43.2%        | 48.9%         |
+| Asian           | 5.0%                      | 6.1%         | 4.8%          |
+| American Indian | 0.7%                      | 1.3%         | 0.7%          |
+
+**Table : Texas Statewide Elections Used**
+
 | Office                |  Stage  | Year |
 |:----------------------|:-------:|-----:|
 | President             | General | 2024 |

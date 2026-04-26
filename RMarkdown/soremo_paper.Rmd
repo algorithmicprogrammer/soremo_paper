@@ -65,6 +65,15 @@ Thereafter, source <data:pl94> in Section sec:datasources is leveraged to genera
 
 ## Data Engineering Layer Implementation
 
+| Office                |  Stage  | Year |
+|:----------------------|:-------:|-----:|
+| President             | General | 2024 |
+| President             | Primary | 2024 |
+| U.S. Senate           | General | 2024 |
+| U.S. Senate           | Primary | 2024 |
+| Railroad Commissioner | General | 2024 |
+| Railroad Commissioner | Primary | 2024 |
+
 ## Ecological Inference Layer Implementation
 
 ![The highest and lowest EI point estimates for each racial group's support of the 3 Democratic nominees in statewide general elections: White (19–24%), AMIN (63–74%), Hispanic (66–72%), Asian (88–90%), and Black (95–96%).](figures/ei_dem_support_ranges.png)

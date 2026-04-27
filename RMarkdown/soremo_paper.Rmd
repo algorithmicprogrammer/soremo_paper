@@ -18,7 +18,7 @@ biblio-style: unsrtnat
 
 # Abstract
 
-Write your abstract in plain English. Why did you do this project? What did it accomplish?
+A modular computational framework for $\S2$ Voting Rights Act is introduced which integrates geospatial data engineering, Bayesian ecological inference, and ensemble generation. Prior work has developed these components individually, existing approaches lack a unified pipeline that propagates uncertainty from voter behavior estimation through plan-level evaluation. A probabilistic notion of minority electoral opportunity is formalized. A case study of Texas congressional districts illustrates how the framework can be used to assess whether an enacted plan systematically dilutes minority voting power.
 
 # Introduction
 
@@ -34,7 +34,7 @@ This distortion produces legislatures that are less representative—often white
 
 By breaking the link between voting and representation, negative racial gerrymandering undermines democratic legitimacy, erodes trust, and contributes to lower turnout and political disengagement.
 
-## The Legality of Negative Racial Gerrymandering
+## The Legality of Negative Racial Gerrymandering {#legality}
 
 Negative racial gerrymandering is illegal in the United States by virtue of the Equal Protection Clause of the Fourteenth Amendment and Section 2 of the Voting Rights Act.
 
@@ -62,7 +62,7 @@ Then, of the individuals left, the Hispanic population must encompass all indivi
 
 Thereafter, source <data:pl94> in Section sec:datasources is leveraged to generate voting age population as sums of census variables [@mggg_vap_cvap].
 
-Subsequently, Source \ref{data:cvap} in Section\~\ref{sec:datasources} is analyzed. The problem is, CVAP data from the ACS must be analyzed at the census block level because the base unit of the Decennial Census PL 94-171 data is the census block. In the primary tables, ACS is reported at the census tract level, which presents a problem because that is a significantly higher level of aggregation than the census block [@mggg_vap_cvap].
+Subsequently, Source \ref{data:cvap} in $\S$\@ref(datasources) is analyzed. The problem is, CVAP data from the ACS must be analyzed at the census block level because the base unit of the Decennial Census PL 94-171 data is the census block. In the primary tables, ACS is reported at the census tract level, which presents a problem because that is a significantly higher level of aggregation than the census block [@mggg_vap_cvap].
 
 Fortunately, the Data and Democracy Lab has introduced a solution to this problem called "discounting" [@mggg_vap_cvap]. Discounting refers to the usage of the tract-level ACS data to estimate the citizenship rates of racial groups, then applying the discount to the voting age population [@mggg_vap_cvap].
 
@@ -80,7 +80,7 @@ The Data and Democracy Lab acknowledges that this is a "crude fix", but states t
 
 ## Ecological Inference
 
-To reiterate what is stated in $\S$\~\ref{sec:legality}, in order to prove a violation of $\S2$ of the Voting Rights Act under the Gingles framework,plaintiffs must prove that the majority votes as a bloc to defeat minority-preferred candidates [@thornburg1986gingles]. Hence, any framework performing $\S2$ Voting Rights Act analysis must encompass identification of minority-preferred political candidates [@BeckerDuchinGoldHirsch2021].
+To reiterate what is stated in $\S$\@ref(legality), in order to prove a violation of $\S2$ of the Voting Rights Act under the Gingles framework,plaintiffs must prove that the majority votes as a bloc to defeat minority-preferred candidates [@thornburg1986gingles]. Hence, any framework performing $\S2$ Voting Rights Act analysis must encompass identification of minority-preferred political candidates [@BeckerDuchinGoldHirsch2021].
 
 In state election return datasets, vote totals for political candidates are not computed by race, meaning that direct computation of minority-preferred candidates is impossible [@BeckerDuchinGoldHirsch2021]. This is where ecological inference - the de-facto solution for determining racially polarized voting - comes in. After all, ecological inference is widely regarded as "the best and often only hope of making progress" when it comes to extracting clues about individual behavior from group or aggregate-level data [@king2004ecological].
 
@@ -98,7 +98,7 @@ Each ecological inference run generates a large random sample of estimated vote 
 
 ## Data Engineering Layer
 
-### Data Sources
+### Data Sources {#datasources}
 
 1.  State District Plan Shapefile
 2.  Decennial Census PL 94-171 Redistricting Dataset

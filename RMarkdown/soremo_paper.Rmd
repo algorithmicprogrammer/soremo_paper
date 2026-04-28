@@ -95,6 +95,16 @@ For each election, EI is run at the statewide level using precinct-level input t
 
 Each ecological inference run generates a large random sample of estimated vote counts; in order to obtain the statewide estimates, these values are summed across the entire state [@BeckerDuchinGoldHirsch2021]. For each racial group, the candidate with the highest average estimated vote total for an election is the preferred candidate [@BeckerDuchinGoldHirsch2021]. In order to obtain a measure of confidence for the a candidate was correctly identified as the preferred candidate, repeated draws for the ecological inference distribution are obtained and the frequency by which the preferred candidate receives the most votes is recorded [@BeckerDuchinGoldHirsch2021].
 
+## Ensemble-Based Outlier Analysis in Redistricting
+### Recombination Markov Chains
+The early ensembles relied on flip-based Markov chains, which propose single-precinct boundary changes between adjacent districts. Flip chains have well-understood detailed balance with respect to a known target measure but mix poorly on real precinct graphs: the proposal kernel changes the partition only marginally per step, and the chain remains correlated with its starting state for chain lengths far beyond what is computationally feasible. 
+
+In 2021, Daryl DeFord, Moon Duchin, and Justin Solomon set forth recombination, a novel family of Markov chains intended for the ensemble generation of alternative redistricting plans [@deford2021recombination]. Recombination is widely considered to be the standard engine for district plan ensemble generation in the redistricting space [@BeckerDuchinGoldHirsch2021].
+
+— which proposes whole-district swaps via uniform spanning-tree bipartition of merged adjacent districts — represented a substantial advance in proposal mobility and is now the field's default kernel. The MGGG case studies on Virginia, Massachusetts, and Pennsylvania (Duchin et al., 2018, 2019) and the GerryChain software library that emerged from this work have established ReCom's position as the standard tool for redistricting ensemble generation.
+
+### The Mixing-Time Problem
+
 # The Framework
 
 ## Data Engineering Layer

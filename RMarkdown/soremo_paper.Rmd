@@ -30,7 +30,7 @@ Gerrymandering is a tactic that has been interwoven with United States politics 
 
 Negative racial gerrymandering dilutes minority voting power by engineering districts in which minority ballots systematically matter less. Although minority voters retain the formal right to vote, they lack proportional influence.
 
-Unfortunately, this practice has materialized throughout U.S. history. For instance, in response to black Americans obtaining the right to vote in 1870, Reconstruction-era Redeemer Southern Democrats wielded negative racial gerrymandering to preserve white supremacy and curtail black political power [@valley2024two]. 
+Unfortunately, this practice has materialized throughout U.S. history. For instance, in response to black Americans obtaining the right to vote in 1870, Reconstruction-era Redeemer Southern Democrats wielded negative racial gerrymandering to preserve white supremacy and curtail black political power [@valelly2004two]. 
 
 This distortion produces legislatures that are less representative—often whiter and more ideologically extreme than the electorate—and weakens elected officials’ incentives to respond to minority interests.
 

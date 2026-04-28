@@ -2,7 +2,7 @@
 title: "A Modular Computational Framework for Section 2 Voting Rights Act Analysis" 
 subtitle: "Spring 2026 SoReMo Fellowship Project Final Technical Report"
 author: 
-  - Alicia  Guerra, Illinois Institute of Technology^[[Contact the author](mailto:aguerra@hawk.illinoistech.edu).] 
+  - Alicia Guerra, Illinois Institute of Technology^[[Contact the author](mailto:aguerra@hawk.illinoistech.edu).] 
 output:
   pdf_document:
     toc: true
@@ -10,6 +10,9 @@ output:
     fig_width: 2
     fig_caption: true
     citation_package: natbib
+header-includes:
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
 urlcolor: cyan
 linkcolor: cyan
 bibliography: mybiblio.bib

@@ -228,7 +228,6 @@ y_{d}\log \sigma(\alpha + \beta \rho_d)
 + (1 - y_{d})\log\bigl(1 - \sigma(\alpha + \beta \rho_d)\bigr)
 \Bigr]
 - \tfrac{\lambda}{2}(\alpha^2 + \beta^2),
-\tag{4.9}
 $$ with $\lambda = 10^{-6}$ for numerical stability. When a calibration cell contains only one observed class (a common occurrence for the Neither subgroup under tightly clustered benchmarks) we revert to the identity calibration $\alpha_{m,g} = 0$, $\beta_{m,g} = 1$, propagating the raw score unchanged rather than allowing complete separation to drive $|\beta|$ to infinity.
 
 The fitted parameters $\{(\alpha_{m,g}, \beta_{m,g})\}$ are written to a nine-row table that the ensemble layer consults whenever it requires a calibrated opportunity probability. Recalibration is inexpensive, requires no re-sampling of the EI posterior, and is the natural point at which to ingest new benchmark data when additional general elections become available.

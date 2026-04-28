@@ -112,6 +112,127 @@ Each ecological inference run generates a large random sample of estimated vote 
 
 ## Ecological Inference Layer
 
+The ecological inference layer's first inferential stage converts observed precinct-level election returns and citizen voting-age population (CVAP) composition into group-conditional posterior distributions over vote choice. These distributions are the substrate on which all downstream Voting Rights Act opportunity scoring is built: they identify the minority-preferred candidates in each contest, they provide precinct-level posterior summaries of group-specific vote counts (used to construct district-level support estimates over the ensemble of plans), and they supply the raw scores to which a per-mode, per-group logistic calibration is fit.
+
+### Inputs and the Inferential Target
+
+The dataset generated in the data engineering layer is a precinct-level table covering all of Texas. For each precinct $p$ there is a vector of CVAP shares $X_p = (X_{p,1}, \dots, X_{p,R}) \in \Delta^{R-1}$ across $R = 5$ racial groups (Hispanic, Black, White, Asian, and American Indian/Native) together with per-candidate vote counts and total turnout for each contest in our election inventory. Mixed primaries are split by party so each fitted election has a single, party-specific non-voting category; the Republican "Uncommitted" line in the 2024 Presidential primary is dropped because it admits no candidate-level racial identification.
+
+Because the secret ballot makes the joint distribution of race and vote choice unobservable, we recover it by ecological inference: a model that reconciles the two observed marginals — racial composition by precinct and vote totals by precinct — to produce a credible posterior over within-precinct, group-specific support.
+
+### Model and Inference
+
+We use the row-by-column (RxC) hierarchical Multinomial-Dirichlet Bayesian model of @Rosen2001, the standard specification for redistricting EI since @Becker2021. Let $C$ index the columns: one per candidate plus an *Abstain* column, so column totals sum to CVAP rather than to ballots cast. For each precinct $p$ and each group $r$, define a latent simplex $\beta_{p,r,\cdot} \in \Delta^{C-1}$ giving group $r$'s probabilities over the $C$ outcomes in precinct $p$. The hierarchical specification is
+
+$$
+\beta_{p,r,\cdot} \mid \alpha_r \;\sim\; \mathrm{Dirichlet}(\alpha_r),
+\qquad
+\alpha_r \;\sim\; \pi(\alpha_r),
+\qquad
+r = 1, \dots, R,
+\;\; p = 1, \dots, P,
+$$
+
+where $\pi(\alpha_r)$ is the weakly-informative hyperprior implemented by the `RowByColumnEI` class of `pyei` [@pyei]. Conditional on $\{\beta_{p,r,c}\}$ and the (fixed) group fractions $X_p$, the precinct-level outcome probabilities are the group-share-weighted mixture
+
+$$
+\theta_{p,c} \;=\; \sum_{r=1}^{R} X_{p,r}\,\beta_{p,r,c},
+\qquad c = 1, \dots, C,
+$$
+
+and the observed column counts $V_{p,\cdot}$ — votes by candidate plus the abstention residual — follow
+
+$$
+V_{p,\cdot} \mid \theta_p \;\sim\; \mathrm{Multinomial}(N_p, \theta_p),
+\qquad
+N_p \;=\; \mathrm{CVAP}_p.
+$$
+
+Treating CVAP as the multinomial denominator (rather than ballots cast) is deliberate: it ties the abstention rate to the same demographic composition used to identify candidate support, so heterogeneity in turnout across groups is absorbed into the posterior over $\beta$ rather than being silently projected out by re-normalising the columns. For each contest we fit (4.1)–(4.3) independently; precincts with $N_p = 0$ or with no votes recorded for the contest are excluded, and contests retaining fewer than 50 precincts after filtering are dropped.
+
+Posterior inference uses the No-U-Turn Sampler [@HoffmanGelman2014] with 1{,}000 retained draws per chain after 100{,}000 tuning steps, a single chain, and a fixed random seed; sampling is performed in single precision to keep the posterior tensor (draws $\times$ precincts $\times$ groups $\times$ candidates) within memory. Per-contest traces are checkpointed to NetCDF so that the postprocessing stage can be rerun without re-sampling.
+
+### Posterior Summaries
+
+Three quantities are exported per contest. Let $S$ index the retained MCMC draws and let $\beta^{(s)}_{p,r,c}$ denote the $s$-th draw.
+
+**Statewide preferences.** Group $r$'s statewide support for candidate $c$ in draw $s$ is the CVAP-weighted average of within-precinct probabilities,
+
+$$
+\hat{S}^{(s)}_{r,c}
+\;=\;
+\frac{\sum_p X_{p,r}\,N_p\,\beta^{(s)}_{p,r,c}}{\sum_p X_{p,r}\,N_p}.
+$$
+
+The candidate of choice is $c^\star_r = \arg\max_c \overline{S}_{r,c}$ where $\overline{S}_{r,c} = S^{-1} \sum_s \hat{S}^{(s)}_{r,c}$. We report $\overline{S}_{r,c^\star_r}$ alongside the fraction of draws under which $c^\star_r$ is the modal preference,
+
+$$
+\pi_{r}
+\;=\;
+\frac{1}{S} \sum_{s=1}^{S} \mathbf{1}\!\left[\arg\max_c \hat{S}^{(s)}_{r,c} \;=\; c^\star_r\right].
+$$
+
+The latter quantity, written `prob` in the downstream tables, supplies the posterior credibility that group $r$'s preferred candidate is in fact $c^\star_r$ and is used to weight contests in the cohesion calculation.
+
+**Precinct mean counts.** For each (precinct, group, candidate) we record the posterior mean estimated count
+
+$$
+\overline{n}_{p,r,c}
+\;=\;
+X_{p,r}\,N_p\,
+\frac{1}{S}\sum_{s=1}^{S} \beta^{(s)}_{p,r,c}.
+$$
+
+**Precinct count octiles.** Within-precinct posterior uncertainty is preserved for downstream Monte Carlo by exporting eight octile quantiles of the group-specific count posterior, evaluated at the probabilities $\mathcal{Q} = \{k/8 : k = 1, \dots, 8\}$:
+
+$$
+Q_{p,r,c}(q)
+\;=\;
+\mathrm{Quantile}_q\!\left(\bigl\{X_{p,r}\,N_p\,\beta^{(s)}_{p,r,c}\bigr\}_{s=1}^{S}\right),
+\qquad q \in \mathcal{Q}.
+$$
+
+The ensemble layer treats each successive pair of octiles as a uniform bin and samples linearly within it, recovering an empirical eight-bin approximation to the full posterior distribution of $X_{p,r} N_p \beta_{p,r,c}$. The implicit floor $q = 0$ is set to zero, an approximation that biases the simulated draw floor downward only when the posterior places non-negligible mass near zero counts.
+
+These three artefacts are pivoted from the long, draw-aware format produced by the sampler into the wide, composite-key format `{CVAP\_KEY}.{election}\_{candidate}.{permille}` consumed by the ensemble layer, where `CVAP_KEY` maps the EI group label to the corresponding CVAP column (Hispanic $\to$ HCVAP, Black $\to$ BCVAP) and `permille` is the integer $\lfloor 1000 \cdot q \rfloor$. We additionally emit a single-row CSV of in-group cohesion weights $w \in \{1.0, 0.75, 0.5\}$ that the ensemble layer applies to elections in which the candidate of choice is, respectively, a co-ethnic of the group, a co-ethnic of one of the two minority groups but not both, or neither.
+
+### Calibration of VRA-Opportunity Scores
+
+The ensemble-layer scoring function (Section 5) returns, for each district $d$, each model mode $m \in \{\text{statewide}, \text{equal}, \text{district}\}$, and each subgroup $g \in \{\text{Black}, \text{Latino}, \text{Neither}\}$, a raw VRA-opportunity score $\rho_{d,m,g} \in [0, 1]$ constructed as a weighted share of minority-preferred-candidate votes. Raw scores are internally consistent across plans but are not directly interpretable as probabilities of the corresponding opportunity outcome; their ordinal information must be mapped to a calibrated probability scale before being aggregated across modes and subgroups via the Venn-overlap formula used in Section 5.
+
+We calibrate $\rho_{d,m,g}$ by fitting one univariate logistic regression per $(m, g)$ cell — nine models in total. The training data are produced by scoring the enacted Texas congressional plan with the ensemble-layer machinery in `return_raw` mode, harvesting $\{\rho_{d,m,g}\}_{d=1}^{38}$, and pairing each district with a binary label $y_{d,m,g}$ derived from a benchmark general-election outcome:
+
+$$
+y_{d,m,\text{Black}}
+\;=\;
+\mathbf{1}\!\left[\text{black-preferred candidate wins district } d\right],
+$$
+
+with $y_{d,m,\text{Latino}}$ defined analogously and $y_{d,m,\text{Neither}} = 1 - \max(y_{d,m,\text{Black}}, y_{d,m,\text{Latino}})$. Multiple benchmarks may be pooled; raw scores depend only on the enacted plan and so are computed once and reused across benchmarks. For each $(m, g)$ we then fit
+
+$$
+\Pr(y_{d,m,g} = 1 \mid \rho_{d,m,g})
+\;=\;
+\sigma\!\left(\alpha_{m,g} + \beta_{m,g}\,\rho_{d,m,g}\right),
+\qquad
+\sigma(z) = \frac{1}{1 + e^{-z}},
+$$
+
+via Newton-Raphson on the penalised log-likelihood
+
+$$
+\ell(\alpha, \beta)
+\;=\;
+\sum_{d} \Bigl[
+y_{d}\log \sigma(\alpha + \beta \rho_d)
++ (1 - y_{d})\log\bigl(1 - \sigma(\alpha + \beta \rho_d)\bigr)
+\Bigr]
+- \tfrac{\lambda}{2}(\alpha^2 + \beta^2),
+\tag{4.9}
+$$ with $\lambda = 10^{-6}$ for numerical stability. When a calibration cell contains only one observed class (a common occurrence for the Neither subgroup under tightly clustered benchmarks) we revert to the identity calibration $\alpha_{m,g} = 0$, $\beta_{m,g} = 1$, propagating the raw score unchanged rather than allowing complete separation to drive $|\beta|$ to infinity.
+
+The fitted parameters $\{(\alpha_{m,g}, \beta_{m,g})\}$ are written to a nine-row table that the ensemble layer consults whenever it requires a calibrated opportunity probability. Recalibration is inexpensive, requires no re-sampling of the EI posterior, and is the natural point at which to ingest new benchmark data when additional general elections become available.
+
 ![Overview of the ecological inference layer.](figures/ecological_inference_layer.png)
 
 # Case Study: Texas Congressional Districts

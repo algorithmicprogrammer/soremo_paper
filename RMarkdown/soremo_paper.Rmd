@@ -236,6 +236,44 @@ The fitted parameters $\{(\alpha_{m,g}, \beta_{m,g})\}$ are written to a nine-ro
 
 ![Overview of the ecological inference layer.](figures/ecological_inference_layer.png)
 
+## Ensemble Generation & Statistical Comparison Layer
+
+### Setup and Notation
+
+Let $V = \{v_1, \ldots, v_N\}$ denote the precincts in the state, with rook-adjacency graph $G = (V, E)$. A *plan* is a partition $\pi : V \to \{1, \ldots, K\}$ of $V$ into $K$ districts; the enacted Texas congressional plan ($K=38$) is denoted $\pi_0$. Let $\Pi_K(\varepsilon)$ denote the set of plans for which (i) every district induces a connected subgraph, and (ii) the population-balance condition $|\mathrm{pop}(d) / (\mathrm{pop}_{\mathrm{tot}}/K) - 1| \leq \varepsilon$ holds for every $d$. We work throughout with $\varepsilon = 0.05$, the slack at which $\pi_0$ itself is a valid initial state under the precinct-vintage population column used here.
+
+Let $\rho$ denote the *spanning-tree measure* on $\Pi_K(\varepsilon)$, $$
+\rho(\pi) \;\propto\; \prod_{d=1}^{K} \tau\bigl(G[\pi^{-1}(d)]\bigr),
+$$ where $\tau(H)$ is the number of spanning trees of subgraph $H$. This is the canonical neutral measure targeted by Recombination (ReCom) Markov chains [DeFord, Duchin, and Solomon, 2021; Cannon et al., 2022]. The hypothesis we test is $$
+H_0 : \pi_0 \sim \rho_{\mathcal{C}},
+$$ where $\rho_{\mathcal{C}}$ is $\rho$ restricted to a constraint subset $\mathcal{C} \subseteq \Pi_K(\varepsilon)$ encoding compactness and county-respect requirements (defined in §4.3). The test statistics are scalar functionals $T : \Pi_K(\varepsilon) \to \mathbb{R}$ measuring minority opportunity.
+
+The mixing time of practical ReCom kernels on real-world precinct graphs is unknown and conjecturally polynomial but slow. The inference procedure adopted below sidesteps this concern: validity holds *exactly*, regardless of mixing.
+
+## The Opportunity Functional
+ 
+For each protected group $g \in \{B, L\}$ (Black, Latino), each plan $\pi$, and each district $d$, let $p_d^g(\pi) \in [0, 1]$ denote the model-based probability that group $g$'s preferred candidate prevails in district $d$. The probabilities $\{p_d^g(\pi)\}$ are produced by the scoring layer detailed in §3, which combines a row-by-column ecological-inference model of group-specific candidate preferences with recency-weighted election histories under three weighting schemes (statewide, equal, district). Primary results below use the *statewide* mode; results under the alternative modes are reported in Appendix [X].
+ 
+We define the *canonical opportunity functional* as the sum of district-level win probabilities,
+$$
+O_g(\pi) \;=\; \sum_{d=1}^{K} p_d^g(\pi),
+$$
+and a coalition functional crediting each district to whichever group has the higher win probability,
+$$
+O_{\mathrm{joint}}(\pi) \;=\; \sum_{d=1}^{K} \max\!\bigl\{p_d^B(\pi),\, p_d^L(\pi)\bigr\}.
+$$
+$O_g(\pi)$ admits an axiomatic justification (anonymity, district-additivity, monotonicity, normalization) given in §2. As an estimand it is the expected number of districts in which group $g$'s preferred candidate prevails, given the win probabilities supplied by the scoring layer.
+ 
+To express deviation from the *De Grandy* proportional-representation baseline [*Johnson v. De Grandy*, 512 U.S. 997 (1994)], let $\bar{m}_g$ denote the statewide CVAP share of group $g$, and define the diversity-calibrated functional
+$$
+F_g(\pi) \;=\; O_g(\pi) - K\,\bar{m}_g,
+$$
+with $F_{\mathrm{joint}}$ defined analogously using $\bar{m}_{B} + \bar{m}_{L}$. $F_g$ is a translation of $O_g$ that centers the demographic baseline at zero; $F_g(\pi) < 0$ indicates expected opportunity below proportionality. We adopt $F_g$ as the primary test statistic, and report $O_g$ and the ensemble-standardized
+$$
+Z_g(\pi) \;=\; \bigl(O_g(\pi) - \mathbb{E}_{\rho_{\mathcal{C}}}[O_g]\bigr) \big/ \sqrt{\mathrm{Var}_{\rho_{\mathcal{C}}}(O_g)}
+$$
+as auxiliary quantities, with $\mathbb{E}_{\rho_{\mathcal{C}}}$ and $\mathrm{Var}_{\rho_{\mathcal{C}}}$ estimated from the spoke ensemble of §4.4.
+
 # Case Study: Texas Congressional Districts
 
 ## Data Engineering Layer Implementation

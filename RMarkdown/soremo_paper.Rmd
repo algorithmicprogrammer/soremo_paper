@@ -95,6 +95,7 @@ Each ecological inference run generates a large random sample of estimated vote 
 ## Data Engineering Layer
 
 **Figure: Data Engineering Pipeline** 
+
 ![Overview of the data engineering layer.](figures/data_engineering_layer.png)
 
 ### Data Sources {#datasources}

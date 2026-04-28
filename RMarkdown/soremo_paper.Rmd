@@ -24,7 +24,7 @@ A modular computational framework for $\S2$ Voting Rights Act is introduced whic
 
 ## Gerrymandering
 
-Gerrymandering is a tactic that has been interwoven with United States politics since at least 1812, which is when the term was first coined. In simplest terms, gerrymandering can be defined as the manipulation of election district maps to either favor or disfavor a group of people (i.e. a political party, a racial/ethnic group, a socioeconomic class, etc).
+Gerrymandering is a tactic that has been interwoven with United States politics since at least 1812, which is when the term was first coined [@sauer1992geography]. In simplest terms, gerrymandering can be defined as the manipulation of election district maps to either favor or disfavor a group of people (i.e. a political party, a racial/ethnic group, a socioeconomic class, etc).
 
 ## Negative Racial Gerrymandering
 
@@ -48,7 +48,7 @@ In the Thornburg v. Gingles case, the Supreme Court established a framework for 
 
 The U.S. Supreme Court refers to this framework as "the Gingles framework" [@allen_milligan_2023]. For the last 40 years, claims of negative racial gerrymandering in violation of Section 2 of the Voting Rights Act have been assessed via the Gingles framework [@allen_milligan_2023]. In the 2023 Allen v. Milligan decision, the U.S. Supreme Court reaffirmed the validity of the Gingles framework [@allen_milligan_2023].
 
-# Related Work
+# Related Work and Contribution
 
 ## Redistricting Data Preparation
 
@@ -116,6 +116,7 @@ Each ecological inference run generates a large random sample of estimated vote 
 ## Data Engineering Layer Implementation
 
 ### Data Sources
+
 1.  Texas PLANC2333 District Plan Shapefile
 2.  Decennial Census PL 94-171 Redistricting Dataset
 3.  Citizen Voting Age Population by Race and Ethnicity in a Special Tabulation from the ACS 5-Year Estimates

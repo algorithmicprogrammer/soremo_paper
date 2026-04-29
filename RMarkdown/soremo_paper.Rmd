@@ -23,13 +23,13 @@ biblio-style: unsrtnat
 
 A modular computational framework for $\S2$ Voting Rights Act is introduced which integrates geospatial data engineering, Bayesian ecological inference, and ensemble generation. Prior work has developed these components individually, existing approaches lack a unified pipeline that propagates uncertainty from voter behavior estimation through plan-level evaluation. A probabilistic notion of minority electoral opportunity is formalized. A case study of Texas congressional districts illustrates how the framework can be used to assess whether an enacted plan systematically dilutes minority voting power.
 
-# Introduction
+# Introduction {#sec:intro}
 
-## Gerrymandering
+## Gerrymandering {#sec:gerry}
 
 Gerrymandering is a tactic that has been interwoven with United States politics since at least 1812, which is when the term was first coined [@sauer1992geography]. In simplest terms, gerrymandering can be defined as the manipulation of election district maps to either favor or disfavor a group of people (i.e. a political party, a racial/ethnic group, a socioeconomic class, etc).
 
-## Negative Racial Gerrymandering
+## Negative Racial Gerrymandering {#sec:racial-gerry}
 
 Negative racial gerrymandering dilutes minority voting power by engineering districts in which minority ballots systematically matter less. Although minority voters retain the formal right to vote, they lack proportional influence.
 
@@ -51,11 +51,11 @@ In the Thornburg v. Gingles case, the Supreme Court established a framework for 
 
 The U.S. Supreme Court refers to this framework as "the Gingles framework" [@allen_milligan_2023]. For the last 40 years, claims of negative racial gerrymandering in violation of Section 2 of the Voting Rights Act have been assessed via the Gingles framework [@allen_milligan_2023]. In the 2023 Allen v. Milligan decision, the U.S. Supreme Court reaffirmed the validity of the Gingles framework [@allen_milligan_2023].
 
-# Related Work and Contribution
+# Related Work {#sec:related}
 
-## Redistricting Data Preparation
+## Redistricting Data Preparation {#sec:data-prep}
 
-### Constructing Racial Categories
+### Constructing Racial Categories {#sec:race-cats}
 
 In this paper, the Data and Democracy Lab's conventions for constructing demographic categories are adopted.
 
@@ -79,7 +79,7 @@ $$\frac{BCVAP_{ACS}(state \: Z)}{BVAP_{ACS}(state \: Z)} \times BVAP_{PL}(block 
 
 The Data and Democracy Lab acknowledges that this is a "crude fix", but states that they intend to release a "more sophisticated" Bayesian method to address this in the future [@mggg_vap_cvap].
 
-## Ecological Inference
+## Ecological Inference {#sec:ei}
 
 To reiterate what is stated in $\S$\@ref(legality), in order to prove a violation of $\S2$ of the Voting Rights Act under the Gingles framework,plaintiffs must prove that the majority votes as a bloc to defeat minority-preferred candidates [@thornburg1986gingles]. Hence, any framework performing $\S2$ Voting Rights Act analysis must encompass identification of minority-preferred political candidates [@BeckerDuchinGoldHirsch2021].
 
@@ -95,9 +95,9 @@ For each election, EI is run at the statewide level using precinct-level input t
 
 Each ecological inference run generates a large random sample of estimated vote counts; in order to obtain the statewide estimates, these values are summed across the entire state [@BeckerDuchinGoldHirsch2021]. For each racial group, the candidate with the highest average estimated vote total for an election is the preferred candidate [@BeckerDuchinGoldHirsch2021]. In order to obtain a measure of confidence for the a candidate was correctly identified as the preferred candidate, repeated draws for the ecological inference distribution are obtained and the frequency by which the preferred candidate receives the most votes is recorded [@BeckerDuchinGoldHirsch2021].
 
-## Ensemble-Based Outlier Analysis in Redistricting
+## Ensemble-Based Outlier Analysis in Redistricting {#sec:ensemble-related}
 
-### Recombination Markov Chains
+### Recombination Markov Chains {#sec:recom}
 
 The early ensembles relied on flip-based Markov chains, which propose single-precinct boundary changes between adjacent districts. Flip chains have well-understood detailed balance with respect to a known target measure but mix poorly on real precinct graphs: the proposal kernel changes the partition only marginally per step, and the chain remains correlated with its starting state for chain lengths far beyond what is computationally feasible.
 
@@ -105,11 +105,11 @@ In 2021, Daryl DeFord, Moon Duchin, and Justin Solomon set forth recombination, 
 
 — which proposes whole-district swaps via uniform spanning-tree bipartition of merged adjacent districts — represented a substantial advance in proposal mobility and is now the field's default kernel. The MGGG case studies on Virginia, Massachusetts, and Pennsylvania (Duchin et al., 2018, 2019) and the GerryChain software library that emerged from this work have established ReCom's position as the standard tool for redistricting ensemble generation.
 
-### The Mixing-Time Problem
+### The Mixing-Time Problem {#sec:mixing}
 
-# The Framework
+# The Framework {#sec:framework}
 
-## Data Engineering Layer
+## Data Engineering Layer {#sec:data-layer}
 
 ### Data Sources {#datasources}
 
@@ -122,17 +122,17 @@ In 2021, Daryl DeFord, Moon Duchin, and Justin Solomon set forth recombination, 
 
 ![Overview of the data engineering layer.](figures/data_engineering_layer.png)
 
-## Ecological Inference Layer
+## Ecological Inference Layer {#sec:ei-layer}
 
 The ecological inference layer's first inferential stage converts observed precinct-level election returns and citizen voting-age population (CVAP) composition into group-conditional posterior distributions over vote choice. These distributions are the substrate on which all downstream Voting Rights Act opportunity scoring is built: they identify the minority-preferred candidates in each contest, they provide precinct-level posterior summaries of group-specific vote counts (used to construct district-level support estimates over the ensemble of plans), and they supply the raw scores to which a per-mode, per-group logistic calibration is fit.
 
-### Inputs and the Inferential Target
+### Inputs and the Inferential Target {#sec:ei-inputs}
 
 The dataset generated in the data engineering layer is a precinct-level table covering all of Texas. For each precinct $p$ there is a vector of CVAP shares $X_p = (X_{p,1}, \dots, X_{p,R}) \in \Delta^{R-1}$ across $R = 5$ racial groups (Hispanic, Black, White, Asian, and American Indian/Native) together with per-candidate vote counts and total turnout for each contest in our election inventory. Mixed primaries are split by party so each fitted election has a single, party-specific non-voting category; the Republican "Uncommitted" line in the 2024 Presidential primary is dropped because it admits no candidate-level racial identification.
 
 Because the secret ballot makes the joint distribution of race and vote choice unobservable, we recover it by ecological inference: a model that reconciles the two observed marginals — racial composition by precinct and vote totals by precinct — to produce a credible posterior over within-precinct, group-specific support.
 
-### Model and Inference
+### Model and Inference {#sec:ei-model}
 
 We use the row-by-column (RxC) hierarchical Multinomial-Dirichlet Bayesian model of @Rosen2001, the standard specification for redistricting EI since @Becker2021. Let $C$ index the columns: one per candidate plus an *Abstain* column, so column totals sum to CVAP rather than to ballots cast. For each precinct $p$ and each group $r$, define a latent simplex $\beta_{p,r,\cdot} \in \Delta^{C-1}$ giving group $r$'s probabilities over the $C$ outcomes in precinct $p$. The hierarchical specification is
 
@@ -158,7 +158,7 @@ Treating CVAP as the multinomial denominator (rather than ballots cast) is delib
 
 Posterior inference uses the No-U-Turn Sampler [@HoffmanGelman2014] with 1{,}000 retained draws per chain after 100{,}000 tuning steps, a single chain, and a fixed random seed; sampling is performed in single precision to keep the posterior tensor (draws $\times$ precincts $\times$ groups $\times$ candidates) within memory. Per-contest traces are checkpointed to NetCDF so that the postprocessing stage can be rerun without re-sampling.
 
-### Posterior Summaries
+### Posterior Summaries {#sec:ei-summaries}
 
 Three quantities are exported per contest. Let $S$ index the retained MCMC draws and let $\beta^{(s)}_{p,r,c}$ denote the $s$-th draw.
 
@@ -194,7 +194,7 @@ The ensemble layer treats each successive pair of octiles as a uniform bin and s
 
 These three artefacts are pivoted from the long, draw-aware format produced by the sampler into the wide, composite-key format `{CVAP\_KEY}.{election}\_{candidate}.{permille}` consumed by the ensemble layer, where `CVAP_KEY` maps the EI group label to the corresponding CVAP column (Hispanic $\to$ HCVAP, Black $\to$ BCVAP) and `permille` is the integer $\lfloor 1000 \cdot q \rfloor$. We additionally emit a single-row CSV of in-group cohesion weights $w \in \{1.0, 0.75, 0.5\}$ that the ensemble layer applies to elections in which the candidate of choice is, respectively, a co-ethnic of the group, a co-ethnic of one of the two minority groups but not both, or neither.
 
-### Calibration of VRA-Opportunity Scores
+### Calibration of VRA-Opportunity Scores {#sec:calibration}
 
 The ensemble-layer scoring function (Section 5) returns, for each district $d$, each model mode $m \in \{\text{statewide}, \text{equal}, \text{district}\}$, and each subgroup $g \in \{\text{Black}, \text{Latino}, \text{Neither}\}$, a raw VRA-opportunity score $\rho_{d,m,g} \in [0, 1]$ constructed as a weighted share of minority-preferred-candidate votes. Raw scores are internally consistent across plans but are not directly interpretable as probabilities of the corresponding opportunity outcome; their ordinal information must be mapped to a calibrated probability scale before being aggregated across modes and subgroups via the Venn-overlap formula used in Section 5.
 
@@ -228,9 +228,9 @@ The fitted parameters $\{(\alpha_{m,g}, \beta_{m,g})\}$ are written to a nine-ro
 
 ![Overview of the ecological inference layer.](figures/ecological_inference_layer.png)
 
-## Ensemble Generation & Statistical Comparison Layer
+## Ensemble Generation & Statistical Comparison Layer {#sec:ensemble-layer}
 
-### Setup and Notation
+### Setup and Notation {#sec:ensemble-setup}
 
 Let $V = \{v_1, \ldots, v_N\}$ denote the precincts in the state, with rook-adjacency graph $G = (V, E)$. A *plan* is a partition $\pi : V \to \{1, \ldots, K\}$ of $V$ into $K$ districts; the enacted Texas congressional plan ($K=38$) is denoted $\pi_0$. Let $\Pi_K(\varepsilon)$ denote the set of plans for which (i) every district induces a connected subgraph, and (ii) the population-balance condition $|\mathrm{pop}(d) / (\mathrm{pop}_{\mathrm{tot}}/K) - 1| \leq \varepsilon$ holds for every $d$. We work throughout with $\varepsilon = 0.05$, the slack at which $\pi_0$ itself is a valid initial state under the precinct-vintage population column used here.
 
@@ -238,7 +238,7 @@ Let $\rho$ denote the *spanning-tree measure* on $\Pi_K(\varepsilon)$, $$\rho(\p
 
 The mixing time of practical ReCom kernels on real-world precinct graphs is unknown and conjecturally polynomial but slow. The inference procedure adopted below sidesteps this concern: validity holds *exactly*, regardless of mixing.
 
-### The Opportunity Functional
+### The Opportunity Functional {#sec:opportunity}
 
 For each protected group $g \in \{B, L\}$ (Black, Latino), each plan $\pi$, and each district $d$, let $p_d^g(\pi) \in [0, 1]$ denote the model-based probability that group $g$'s preferred candidate prevails in district $d$. The probabilities $\{p_d^g(\pi)\}$ are produced by the scoring layer detailed in §3, which combines a row-by-column ecological-inference model of group-specific candidate preferences with recency-weighted election histories under three weighting schemes (statewide, equal, district). Primary results below use the *statewide* mode; results under the alternative modes are reported in Appendix [X].
 
@@ -246,7 +246,7 @@ We define the *canonical opportunity functional* as the sum of district-level wi
 
 To express deviation from the *De Grandy* proportional-representation baseline [*Johnson v. De Grandy*, 512 U.S. 997 (1994)], let $\bar{m}_g$ denote the statewide CVAP share of group $g$, and define the diversity-calibrated functional $$F_g(\pi) \;=\; O_g(\pi) - K\,\bar{m}_g,$$ with $F_{\mathrm{joint}}$ defined analogously using $\bar{m}_{B} + \bar{m}_{L}$. $F_g$ is a translation of $O_g$ that centers the demographic baseline at zero; $F_g(\pi) < 0$ indicates expected opportunity below proportionality. We adopt $F_g$ as the primary test statistic, and report $O_g$ and the ensemble-standardized $$Z_g(\pi) \;=\; \bigl(O_g(\pi) - \mathbb{E}_{\rho_{\mathcal{C}}}[O_g]\bigr) \big/ \sqrt{\mathrm{Var}_{\rho_{\mathcal{C}}}(O_g)}$$ as auxiliary quantities, with $\mathbb{E}_{\rho_{\mathcal{C}}}$ and $\mathrm{Var}_{\rho_{\mathcal{C}}}$ estimated from the spoke ensemble of §4.4.
 
-## The Neutral Ensemble: ReCom with VRA-Relevant Constraints
+## The Neutral Ensemble: ReCom with VRA-Relevant Constraints {#sec:neutral-ensemble}
 
 Proposals are generated by ReCom [DeFord, Duchin, and Solomon, 2021]. At each step the kernel (a) selects an adjacent district pair uniformly at random, (b) draws a uniform spanning tree on the merged subgraph, and (c) selects an edge whose removal yields a balanced bipartition. Combined with always-accept and the *allow-pair-reselection* variant of `bipartition_tree`—which re-rolls the district pair when no balanced cut exists rather than rejecting the proposal outright—the kernel $P$ approximately satisfies detailed balance with respect to $\rho$ on the constrained state space [DeFord, Duchin, and Solomon, 2021; Cannon et al., 2022]. We rely below on this approximate reversibility; see §4.6 for a discussion of the residual exactness gap.
 
@@ -260,7 +260,7 @@ Both thresholds are scaled to $\pi_0$ rather than imposed in absolute terms, ren
 
 We do *not* impose a hard contiguity validator. ReCom's spanning-tree mechanism guarantees that every accepted proposal is contiguous by construction; imposing contiguity additionally as a validator would cause the chain to reject $\pi_0$ as initial state, because the within-district subgraphs of certain enacted Texas CDs are not graph-connected under the precinct-vintage rook adjacency. This is an artifact of urban CD geometry interacting with rook adjacency rather than a substantive discontiguity.
 
-## Besag-Clifford Exact Inference
+## Besag-Clifford Exact Inference {#sec:bc}
 
 Conventional ReCom analyses report tail-rank statistics from a single long chain and rely on convergence diagnostics to defend their validity. We instead apply the *parallel method* of Besag and Clifford [1989, Proposition 3.3], which yields exact $p$-values under $H_0$ regardless of the kernel's mixing time.
 
@@ -275,11 +275,10 @@ The lower-tail Besag-Clifford $p$-value is therefore $$\widehat{p}_{\text{low}}(
 
 *Power.* $L_{\mathrm{hub}}$ and $L_{\mathrm{spoke}}$ govern dependence structure within the spoke ensemble. Small $L_{\mathrm{hub}}$ leaves $X^{*}$ and hence the spokes correlated with $\pi_0$, depressing power against alternatives near $\pi_0$ in the state graph; small $L_{\mathrm{spoke}}$ leaves spokes correlated with one another, inflating estimator variance for $\mathbb{E}_{\rho_{\mathcal{C}}}[O_g]$ and $\mathrm{Var}_{\rho_{\mathcal{C}}}(O_g)$. We take $L_{\mathrm{hub}} = 2000$ and $L_{\mathrm{spoke}} = 500$. The asymmetric ratio reflects that $X^{*}$ is generated once and shared across all spokes (so the unit cost of $L_{\mathrm{hub}}$ is amortized) while the per-spoke cost scales linearly in $L_{\mathrm{spoke}}$.
 
-# Case Study: Texas Congressional Districts
+# Case Study: Texas Congressional Districts {#sec:case-study}
 
-## Data Engineering Layer Implementation
+## Data Engineering Layer Implementation {#sec:case-data}
 
-### Data Sources
 
 1.  Texas PLANC2333 District Plan Shapefile
 2.  Decennial Census PL 94-171 Redistricting Dataset
@@ -288,32 +287,47 @@ The lower-tail Besag-Clifford $p$-value is therefore $$\widehat{p}_{\text{low}}(
 5.  Texas Voting Tabulation District Shapefile
 6.  State VTDs Election Data
 
-**Table : Texas Demographics**
+Table \@ref(tab:tx-demographics) summarizes the resulting statewide demographic shares.
 
-| Racial Group    | Share of Total Population | Share of VAP | Share of CVAP |
-|-----------------|---------------------------|--------------|---------------|
-| Hispanic        | 34.7%                     | 35.6%        | 32.6%         |
-| Black           | 13.5%                     | 13.0%        | 12.9%         |
-| White           | 46.2%                     | 43.2%        | 48.9%         |
-| Asian           | 5.0%                      | 6.1%         | 4.8%          |
-| American Indian | 0.7%                      | 1.3%         | 0.7%          |
+```{r tx-demographics, echo=FALSE}
+knitr::kable(
+  data.frame(
+    `Racial Group` = c("Hispanic", "Black", "White", "Asian", "American Indian"),
+    `Total Population` = c("34.7%", "13.5%", "46.2%", "5.0%", "0.7%"),
+    `VAP` = c("35.6%", "13.0%", "43.2%", "6.1%", "1.3%"),
+    `CVAP` = c("32.6%", "12.9%", "48.9%", "4.8%", "0.7%"),
+    check.names = FALSE
+  ),
+  caption = "Texas demographics by racial group across population, voting-age population, and citizen voting-age population."
+)
+```
 
-**Table : Texas Statewide Elections Used**
+The election inventory comprises six 2024 statewide contests (Table \@ref(tab:tx-elections)).
 
-| Office                |  Stage  | Year |
-|:----------------------|:-------:|-----:|
-| President             | General | 2024 |
-| President             | Primary | 2024 |
-| U.S. Senate           | General | 2024 |
-| U.S. Senate           | Primary | 2024 |
-| Railroad Commissioner | General | 2024 |
-| Railroad Commissioner | Primary | 2024 |
+```{r tx-elections, echo=FALSE}
+knitr::kable(
+  data.frame(
+    Office = c("President", "President", "U.S. Senate", "U.S. Senate",
+               "Railroad Commissioner", "Railroad Commissioner"),
+    Stage = c("General", "Primary", "General", "Primary", "General", "Primary"),
+    Year = rep(2024, 6)
+  ),
+  caption = "Texas statewide elections used in the case study."
+)
+```
 
-## Ecological Inference Layer Implementation
+## Ecological Inference Layer Implementation {#sec:case-ei}
 
-Figure depicts the highest and lowest ecological inference point estimates of each racial group's support for the Democratic nominee across 3 Texas-statewide 2024 general elections (President,U.S. Senate, and Railroad Commissioner).
+We fit the $R \times C$ model of §\@ref(sec:ei-layer) to each contest in
+Table \@ref(tab:tx-elections) and report posterior support estimates,
+preference identifications, and per-precinct count posteriors at the octile
+resolution.
 
-![The highest and lowest EI point estimates for each racial group's support of the 3 Democratic nominees in statewide general elections: White (19–24%), AMIN (63–74%), Hispanic (66–72%), Asian (88–90%), and Black (95–96%).](figures/ei_dem_support_ranges.png)
+```{r ei-supports, fig.cap="Highest and lowest EI point estimates for each racial group's support of the 3 Democratic nominees in statewide general elections: White (19–24%), AMIN (63–74%), Hispanic (66–72%), Asian (88–90%), and Black (95–96%).", echo=FALSE}
+knitr::include_graphics("figures/ei_dem_support_ranges.png")
+```
+
+
 
 ![f distributions](figures/bc_calibrated_F_distributions_TX_BC_functional.png)
 

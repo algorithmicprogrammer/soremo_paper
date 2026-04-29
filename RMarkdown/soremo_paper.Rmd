@@ -133,7 +133,7 @@ The way a Markov chain works is it proposes whole-district swaps via uniform spa
 ### 2.3.2 The Mixing-Time Problem {#sec:mixing}
 Ensemble-based inference tests rely on the premise that the Markov chain has run long enough for the sampled plans to be approximately representative of the target distribution. The validity of any p-value derived from a single long chain depends on this premise holding. Existing work defends the premise to convergence diagnostics - running multiple chains from different starting points, comparing summary statistics across chains, and monitoring autocorrelation in test statistics over chain length.These diagnostics are necessary but not sufficient because they cannot certify convergence and they offer no formal bound on the bias they fail to detect. 
 
-The underlying difficulty is that the mixing time of ReCom on real-world precinct graphs remains unknown, and it is not known to be polynomial in any rigorous sense.
+The underlying difficulty is that the mixing time of ReCom on real-world precinct graphs remains unknown, and it is not known to be polynomial in any rigorous sense. Cannon et al. establish that although the spanning tree distribution targeted by ReCom is well-defined and the kernel approximately converges to it, there exists a residual gap between the measures of the uniform spanning tree aprroximation actually implemented and the exact spanning tree [@cannon2022voting].They also state that polynomial mixing remains conjectural even on well-behaved graphs [@cannon2022voting].
 
 # The Framework {#sec:framework}
 

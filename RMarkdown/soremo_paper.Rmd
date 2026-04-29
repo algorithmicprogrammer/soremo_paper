@@ -72,7 +72,7 @@ Texas initiated this mid-decade redistricting wave. Reacting to pressure from th
 
 ## 2.1 Redistricting Data Preparation {#sec:data-prep}
 
-### Constructing Racial Categories {#sec:race-cats}
+### 2.1.1 Constructing Racial Categories {#sec:race-cats}
 
 In this paper, the Data and Democracy Lab's conventions for constructing demographic categories are adopted.
 
@@ -130,7 +130,10 @@ Recombination chains are considered to be superior to flip chains because they p
 
 The way a Markov chain works is it proposes whole-district swaps via uniform spanning tree bipartitions of merged adjacent districts [@deford2021recombination].
 
-### The Mixing-Time Problem {#sec:mixing}
+### 2.3.2 The Mixing-Time Problem {#sec:mixing}
+Ensemble-based inference tests rely on the premise that the Markov chain has run long enough for the sampled plans to be approximately representative of the target distribution. The validity of any p-value derived from a single long chain depends on this premise holding. Existing work defends the premise to convergence diagnostics - running multiple chains from different starting points, comparing summary statistics across chains, and monitoring autocorrelation in test statistics over chain length.These diagnostics are necessary but not sufficient because they cannot certify convergence and they offer no formal bound on the bias they fail to detect. 
+
+The underlying difficulty is that the mixing time of ReCom on real-world precinct graphs remains unknown, and it is not known to be polynomial in any rigorous sense.
 
 # The Framework {#sec:framework}
 

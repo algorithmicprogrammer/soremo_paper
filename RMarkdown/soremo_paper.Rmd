@@ -26,6 +26,7 @@ A modular computational framework for $\S2$ Voting Rights Act is introduced whic
 # 1 Introduction {#sec:intro}
 
 ## 1.1 Redistricting
+Redistricting refers to the periodic redrawing of geographic boundaries that define electoral districts. Because most legislative bodies in democratic systems are comprised of elected representatives from specified constituencies, the lines that split up the districts determine which voters are grouped together, which communities share electoral representation, and which candidates and parties prevail in elections [@cain1985partisan].
 
 ## 1.2 The Redistricting Process in the United States
 

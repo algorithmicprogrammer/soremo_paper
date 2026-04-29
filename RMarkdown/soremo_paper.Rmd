@@ -96,8 +96,10 @@ For each election, EI is run at the statewide level using precinct-level input t
 Each ecological inference run generates a large random sample of estimated vote counts; in order to obtain the statewide estimates, these values are summed across the entire state [@BeckerDuchinGoldHirsch2021]. For each racial group, the candidate with the highest average estimated vote total for an election is the preferred candidate [@BeckerDuchinGoldHirsch2021]. In order to obtain a measure of confidence for the a candidate was correctly identified as the preferred candidate, repeated draws for the ecological inference distribution are obtained and the frequency by which the preferred candidate receives the most votes is recorded [@BeckerDuchinGoldHirsch2021].
 
 ## Ensemble-Based Outlier Analysis in Redistricting
+
 ### Recombination Markov Chains
-The early ensembles relied on flip-based Markov chains, which propose single-precinct boundary changes between adjacent districts. Flip chains have well-understood detailed balance with respect to a known target measure but mix poorly on real precinct graphs: the proposal kernel changes the partition only marginally per step, and the chain remains correlated with its starting state for chain lengths far beyond what is computationally feasible. 
+
+The early ensembles relied on flip-based Markov chains, which propose single-precinct boundary changes between adjacent districts. Flip chains have well-understood detailed balance with respect to a known target measure but mix poorly on real precinct graphs: the proposal kernel changes the partition only marginally per step, and the chain remains correlated with its starting state for chain lengths far beyond what is computationally feasible.
 
 In 2021, Daryl DeFord, Moon Duchin, and Justin Solomon set forth recombination, a novel family of Markov chains intended for the ensemble generation of alternative redistricting plans [@deford2021recombination]. Recombination is widely considered to be the standard engine for district plan ensemble generation in the redistricting space [@BeckerDuchinGoldHirsch2021].
 
@@ -134,29 +136,23 @@ Because the secret ballot makes the joint distribution of race and vote choice u
 
 We use the row-by-column (RxC) hierarchical Multinomial-Dirichlet Bayesian model of @Rosen2001, the standard specification for redistricting EI since @Becker2021. Let $C$ index the columns: one per candidate plus an *Abstain* column, so column totals sum to CVAP rather than to ballots cast. For each precinct $p$ and each group $r$, define a latent simplex $\beta_{p,r,\cdot} \in \Delta^{C-1}$ giving group $r$'s probabilities over the $C$ outcomes in precinct $p$. The hierarchical specification is
 
-$$
-\beta_{p,r,\cdot} \mid \alpha_r \;\sim\; \mathrm{Dirichlet}(\alpha_r),
+$$\beta_{p,r,\cdot} \mid \alpha_r \;\sim\; \mathrm{Dirichlet}(\alpha_r),
 \qquad
 \alpha_r \;\sim\; \pi(\alpha_r),
 \qquad
 r = 1, \dots, R,
-\;\; p = 1, \dots, P,
-$$
+\;\; p = 1, \dots, P,$$
 
 where $\pi(\alpha_r)$ is the weakly-informative hyperprior implemented by the `RowByColumnEI` class of `pyei` [@pyei]. Conditional on $\{\beta_{p,r,c}\}$ and the (fixed) group fractions $X_p$, the precinct-level outcome probabilities are the group-share-weighted mixture
 
-$$
-\theta_{p,c} \;=\; \sum_{r=1}^{R} X_{p,r}\,\beta_{p,r,c},
-\qquad c = 1, \dots, C,
-$$
+$$\theta_{p,c} \;=\; \sum_{r=1}^{R} X_{p,r}\,\beta_{p,r,c},
+\qquad c = 1, \dots, C,$$
 
 and the observed column counts $V_{p,\cdot}$ — votes by candidate plus the abstention residual — follow
 
-$$
-V_{p,\cdot} \mid \theta_p \;\sim\; \mathrm{Multinomial}(N_p, \theta_p),
+$$V_{p,\cdot} \mid \theta_p \;\sim\; \mathrm{Multinomial}(N_p, \theta_p),
 \qquad
-N_p \;=\; \mathrm{CVAP}_p.
-$$
+N_p \;=\; \mathrm{CVAP}_p.$$
 
 Treating CVAP as the multinomial denominator (rather than ballots cast) is deliberate: it ties the abstention rate to the same demographic composition used to identify candidate support, so heterogeneity in turnout across groups is absorbed into the posterior over $\beta$ rather than being silently projected out by re-normalising the columns. For each contest we fit (4.1)–(4.3) independently; precincts with $N_p = 0$ or with no votes recorded for the contest are excluded, and contests retaining fewer than 50 precincts after filtering are dropped.
 
@@ -168,39 +164,31 @@ Three quantities are exported per contest. Let $S$ index the retained MCMC draws
 
 **Statewide preferences.** Group $r$'s statewide support for candidate $c$ in draw $s$ is the CVAP-weighted average of within-precinct probabilities,
 
-$$
-\hat{S}^{(s)}_{r,c}
+$$\hat{S}^{(s)}_{r,c}
 \;=\;
-\frac{\sum_p X_{p,r}\,N_p\,\beta^{(s)}_{p,r,c}}{\sum_p X_{p,r}\,N_p}.
-$$
+\frac{\sum_p X_{p,r}\,N_p\,\beta^{(s)}_{p,r,c}}{\sum_p X_{p,r}\,N_p}.$$
 
 The candidate of choice is $c^\star_r = \arg\max_c \overline{S}_{r,c}$ where $\overline{S}_{r,c} = S^{-1} \sum_s \hat{S}^{(s)}_{r,c}$. We report $\overline{S}_{r,c^\star_r}$ alongside the fraction of draws under which $c^\star_r$ is the modal preference,
 
-$$
-\pi_{r}
+$$\pi_{r}
 \;=\;
-\frac{1}{S} \sum_{s=1}^{S} \mathbf{1}\!\left[\arg\max_c \hat{S}^{(s)}_{r,c} \;=\; c^\star_r\right].
-$$
+\frac{1}{S} \sum_{s=1}^{S} \mathbf{1}\!\left[\arg\max_c \hat{S}^{(s)}_{r,c} \;=\; c^\star_r\right].$$
 
 The latter quantity, written `prob` in the downstream tables, supplies the posterior credibility that group $r$'s preferred candidate is in fact $c^\star_r$ and is used to weight contests in the cohesion calculation.
 
 **Precinct mean counts.** For each (precinct, group, candidate) we record the posterior mean estimated count
 
-$$
-\overline{n}_{p,r,c}
+$$\overline{n}_{p,r,c}
 \;=\;
 X_{p,r}\,N_p\,
-\frac{1}{S}\sum_{s=1}^{S} \beta^{(s)}_{p,r,c}.
-$$
+\frac{1}{S}\sum_{s=1}^{S} \beta^{(s)}_{p,r,c}.$$
 
 **Precinct count octiles.** Within-precinct posterior uncertainty is preserved for downstream Monte Carlo by exporting eight octile quantiles of the group-specific count posterior, evaluated at the probabilities $\mathcal{Q} = \{k/8 : k = 1, \dots, 8\}$:
 
-$$
-Q_{p,r,c}(q)
+$$Q_{p,r,c}(q)
 \;=\;
 \mathrm{Quantile}_q\!\left(\bigl\{X_{p,r}\,N_p\,\beta^{(s)}_{p,r,c}\bigr\}_{s=1}^{S}\right),
-\qquad q \in \mathcal{Q}.
-$$
+\qquad q \in \mathcal{Q}.$$
 
 The ensemble layer treats each successive pair of octiles as a uniform bin and samples linearly within it, recovering an empirical eight-bin approximation to the full posterior distribution of $X_{p,r} N_p \beta_{p,r,c}$. The implicit floor $q = 0$ is set to zero, an approximation that biases the simulated draw floor downward only when the posterior places non-negligible mass near zero counts.
 
@@ -212,33 +200,27 @@ The ensemble-layer scoring function (Section 5) returns, for each district $d$, 
 
 We calibrate $\rho_{d,m,g}$ by fitting one univariate logistic regression per $(m, g)$ cell — nine models in total. The training data are produced by scoring the enacted Texas congressional plan with the ensemble-layer machinery in `return_raw` mode, harvesting $\{\rho_{d,m,g}\}_{d=1}^{38}$, and pairing each district with a binary label $y_{d,m,g}$ derived from a benchmark general-election outcome:
 
-$$
-y_{d,m,\text{Black}}
+$$y_{d,m,\text{Black}}
 \;=\;
-\mathbf{1}\!\left[\text{black-preferred candidate wins district } d\right],
-$$
+\mathbf{1}\!\left[\text{black-preferred candidate wins district } d\right],$$
 
 with $y_{d,m,\text{Latino}}$ defined analogously and $y_{d,m,\text{Neither}} = 1 - \max(y_{d,m,\text{Black}}, y_{d,m,\text{Latino}})$. Multiple benchmarks may be pooled; raw scores depend only on the enacted plan and so are computed once and reused across benchmarks. For each $(m, g)$ we then fit
 
-$$
-\Pr(y_{d,m,g} = 1 \mid \rho_{d,m,g})
+$$\Pr(y_{d,m,g} = 1 \mid \rho_{d,m,g})
 \;=\;
 \sigma\!\left(\alpha_{m,g} + \beta_{m,g}\,\rho_{d,m,g}\right),
 \qquad
-\sigma(z) = \frac{1}{1 + e^{-z}},
-$$
+\sigma(z) = \frac{1}{1 + e^{-z}},$$
 
 via Newton-Raphson on the penalised log-likelihood
 
-$$
-\ell(\alpha, \beta)
+$$\ell(\alpha, \beta)
 \;=\;
 \sum_{d} \Bigl[
 y_{d}\log \sigma(\alpha + \beta \rho_d)
 + (1 - y_{d})\log\bigl(1 - \sigma(\alpha + \beta \rho_d)\bigr)
 \Bigr]
-- \tfrac{\lambda}{2}(\alpha^2 + \beta^2),
-$$
+- \tfrac{\lambda}{2}(\alpha^2 + \beta^2),$$
 
 with $\lambda = 10^{-6}$ for numerical stability. When a calibration cell contains only one observed class (a common occurrence for the Neither subgroup under tightly clustered benchmarks) we revert to the identity calibration $\alpha_{m,g} = 0$, $\beta_{m,g} = 1$, propagating the raw score unchanged rather than allowing complete separation to drive $|\beta|$ to infinity.
 
@@ -252,11 +234,7 @@ The fitted parameters $\{(\alpha_{m,g}, \beta_{m,g})\}$ are written to a nine-ro
 
 Let $V = \{v_1, \ldots, v_N\}$ denote the precincts in the state, with rook-adjacency graph $G = (V, E)$. A *plan* is a partition $\pi : V \to \{1, \ldots, K\}$ of $V$ into $K$ districts; the enacted Texas congressional plan ($K=38$) is denoted $\pi_0$. Let $\Pi_K(\varepsilon)$ denote the set of plans for which (i) every district induces a connected subgraph, and (ii) the population-balance condition $|\mathrm{pop}(d) / (\mathrm{pop}_{\mathrm{tot}}/K) - 1| \leq \varepsilon$ holds for every $d$. We work throughout with $\varepsilon = 0.05$, the slack at which $\pi_0$ itself is a valid initial state under the precinct-vintage population column used here.
 
-Let $\rho$ denote the *spanning-tree measure* on $\Pi_K(\varepsilon)$, $$
-\rho(\pi) \;\propto\; \prod_{d=1}^{K} \tau\bigl(G[\pi^{-1}(d)]\bigr),
-$$ where $\tau(H)$ is the number of spanning trees of subgraph $H$. This is the canonical neutral measure targeted by Recombination (ReCom) Markov chains [DeFord, Duchin, and Solomon, 2021; Cannon et al., 2022]. The hypothesis we test is $$
-H_0 : \pi_0 \sim \rho_{\mathcal{C}},
-$$ where $\rho_{\mathcal{C}}$ is $\rho$ restricted to a constraint subset $\mathcal{C} \subseteq \Pi_K(\varepsilon)$ encoding compactness and county-respect requirements (defined in §4.3). The test statistics are scalar functionals $T : \Pi_K(\varepsilon) \to \mathbb{R}$ measuring minority opportunity.
+Let $\rho$ denote the *spanning-tree measure* on $\Pi_K(\varepsilon)$, $$\rho(\pi) \;\propto\; \prod_{d=1}^{K} \tau\bigl(G[\pi^{-1}(d)]\bigr),$$ where $\tau(H)$ is the number of spanning trees of subgraph $H$. This is the canonical neutral measure targeted by Recombination (ReCom) Markov chains [DeFord, Duchin, and Solomon, 2021; Cannon et al., 2022]. The hypothesis we test is $$H_0 : \pi_0 \sim \rho_{\mathcal{C}},$$ where $\rho_{\mathcal{C}}$ is $\rho$ restricted to a constraint subset $\mathcal{C} \subseteq \Pi_K(\varepsilon)$ encoding compactness and county-respect requirements (defined in §4.3). The test statistics are scalar functionals $T : \Pi_K(\varepsilon) \to \mathbb{R}$ measuring minority opportunity.
 
 The mixing time of practical ReCom kernels on real-world precinct graphs is unknown and conjecturally polynomial but slow. The inference procedure adopted below sidesteps this concern: validity holds *exactly*, regardless of mixing.
 
@@ -264,17 +242,9 @@ The mixing time of practical ReCom kernels on real-world precinct graphs is unkn
 
 For each protected group $g \in \{B, L\}$ (Black, Latino), each plan $\pi$, and each district $d$, let $p_d^g(\pi) \in [0, 1]$ denote the model-based probability that group $g$'s preferred candidate prevails in district $d$. The probabilities $\{p_d^g(\pi)\}$ are produced by the scoring layer detailed in §3, which combines a row-by-column ecological-inference model of group-specific candidate preferences with recency-weighted election histories under three weighting schemes (statewide, equal, district). Primary results below use the *statewide* mode; results under the alternative modes are reported in Appendix [X].
 
-We define the *canonical opportunity functional* as the sum of district-level win probabilities, $$
-O_g(\pi) \;=\; \sum_{d=1}^{K} p_d^g(\pi),
-$$ and a coalition functional crediting each district to whichever group has the higher win probability, $$
-O_{\mathrm{joint}}(\pi) \;=\; \sum_{d=1}^{K} \max\!\bigl\{p_d^B(\pi),\, p_d^L(\pi)\bigr\}.
-$$ $O_g(\pi)$ admits an axiomatic justification (anonymity, district-additivity, monotonicity, normalization) given in §2. As an estimand it is the expected number of districts in which group $g$'s preferred candidate prevails, given the win probabilities supplied by the scoring layer.
+We define the *canonical opportunity functional* as the sum of district-level win probabilities, $$O_g(\pi) \;=\; \sum_{d=1}^{K} p_d^g(\pi),$$ and a coalition functional crediting each district to whichever group has the higher win probability, $$O_{\mathrm{joint}}(\pi) \;=\; \sum_{d=1}^{K} \max\!\bigl\{p_d^B(\pi),\, p_d^L(\pi)\bigr\}.$$ $O_g(\pi)$ admits an axiomatic justification (anonymity, district-additivity, monotonicity, normalization) given in §2. As an estimand it is the expected number of districts in which group $g$'s preferred candidate prevails, given the win probabilities supplied by the scoring layer.
 
-To express deviation from the *De Grandy* proportional-representation baseline [*Johnson v. De Grandy*, 512 U.S. 997 (1994)], let $\bar{m}_g$ denote the statewide CVAP share of group $g$, and define the diversity-calibrated functional $$
-F_g(\pi) \;=\; O_g(\pi) - K\,\bar{m}_g,
-$$ with $F_{\mathrm{joint}}$ defined analogously using $\bar{m}_{B} + \bar{m}_{L}$. $F_g$ is a translation of $O_g$ that centers the demographic baseline at zero; $F_g(\pi) < 0$ indicates expected opportunity below proportionality. We adopt $F_g$ as the primary test statistic, and report $O_g$ and the ensemble-standardized $$
-Z_g(\pi) \;=\; \bigl(O_g(\pi) - \mathbb{E}_{\rho_{\mathcal{C}}}[O_g]\bigr) \big/ \sqrt{\mathrm{Var}_{\rho_{\mathcal{C}}}(O_g)}
-$$ as auxiliary quantities, with $\mathbb{E}_{\rho_{\mathcal{C}}}$ and $\mathrm{Var}_{\rho_{\mathcal{C}}}$ estimated from the spoke ensemble of §4.4.
+To express deviation from the *De Grandy* proportional-representation baseline [*Johnson v. De Grandy*, 512 U.S. 997 (1994)], let $\bar{m}_g$ denote the statewide CVAP share of group $g$, and define the diversity-calibrated functional $$F_g(\pi) \;=\; O_g(\pi) - K\,\bar{m}_g,$$ with $F_{\mathrm{joint}}$ defined analogously using $\bar{m}_{B} + \bar{m}_{L}$. $F_g$ is a translation of $O_g$ that centers the demographic baseline at zero; $F_g(\pi) < 0$ indicates expected opportunity below proportionality. We adopt $F_g$ as the primary test statistic, and report $O_g$ and the ensemble-standardized $$Z_g(\pi) \;=\; \bigl(O_g(\pi) - \mathbb{E}_{\rho_{\mathcal{C}}}[O_g]\bigr) \big/ \sqrt{\mathrm{Var}_{\rho_{\mathcal{C}}}(O_g)}$$ as auxiliary quantities, with $\mathbb{E}_{\rho_{\mathcal{C}}}$ and $\mathrm{Var}_{\rho_{\mathcal{C}}}$ estimated from the spoke ensemble of §4.4.
 
 ## The Neutral Ensemble: ReCom with VRA-Relevant Constraints
 
@@ -282,13 +252,9 @@ Proposals are generated by ReCom [DeFord, Duchin, and Solomon, 2021]. At each st
 
 The constraint set $\mathcal{C}$ comprises the population-balance requirement embedded in $\Pi_K(\varepsilon)$ together with two state-relative thresholds:
 
-(i) *Compactness.* Total cut-edges, $\mathrm{CE}(\pi) = |\{e \in E : \pi(u) \neq \pi(w)\ \text{for}\ e=\{u,w\}\}|$, must satisfy $$
-    \mathrm{CE}(\pi) \;\leq\; s_c \cdot \mathrm{CE}(\pi_0), \qquad s_c = 1.5.
-    $$ The slack $s_c$ is conventional in the redistricting literature [Mattingly et al., e.g., Herschlag et al., 2020]. Setting $s_c = \infty$ recovers ReCom's implicit spanning-tree compactness preference alone.
+(i) *Compactness.* Total cut-edges, $\mathrm{CE}(\pi) = |\{e \in E : \pi(u) \neq \pi(w)\ \text{for}\ e=\{u,w\}\}|$, must satisfy $$\mathrm{CE}(\pi) \;\leq\; s_c \cdot \mathrm{CE}(\pi_0), \qquad s_c = 1.5.$$ The slack $s_c$ is conventional in the redistricting literature [Mattingly et al., e.g., Herschlag et al., 2020]. Setting $s_c = \infty$ recovers ReCom's implicit spanning-tree compactness preference alone.
 
-(ii) *County splits.* Let $\mathrm{CS}(\pi)$ denote the number of counties whose precincts span two or more districts. We impose $$
-     \mathrm{CS}(\pi) \;\leq\; s_g \cdot \mathrm{CS}(\pi_0), \qquad s_g = 1.2.
-     $$ This constraint addresses the standard expert-witness objection that ensemble plans achieve elevated minority-opportunity scores by carving counties more aggressively than feasible legislative drafts. The 20% slack is chosen to preserve the constraint's bite while admitting sufficient mobility for the chain to mix; tighter slacks substantially slow mixing on the Texas precinct graph.
+(ii) *County splits.* Let $\mathrm{CS}(\pi)$ denote the number of counties whose precincts span two or more districts. We impose $$\mathrm{CS}(\pi) \;\leq\; s_g \cdot \mathrm{CS}(\pi_0), \qquad s_g = 1.2.$$ This constraint addresses the standard expert-witness objection that ensemble plans achieve elevated minority-opportunity scores by carving counties more aggressively than feasible legislative drafts. The 20% slack is chosen to preserve the constraint's bite while admitting sufficient mobility for the chain to mix; tighter slacks substantially slow mixing on the Texas precinct graph.
 
 Both thresholds are scaled to $\pi_0$ rather than imposed in absolute terms, rendering $\mathcal{C}$ state-relative: the null distribution we compare $\pi_0$ against consists of plans that are no less compact and no more county-splitting than $\pi_0$ itself, scaled by the slacks.
 
@@ -298,16 +264,10 @@ We do *not* impose a hard contiguity validator. ReCom's spanning-tree mechanism 
 
 Conventional ReCom analyses report tail-rank statistics from a single long chain and rely on convergence diagnostics to defend their validity. We instead apply the *parallel method* of Besag and Clifford [1989, Proposition 3.3], which yields exact $p$-values under $H_0$ regardless of the kernel's mixing time.
 
-**Construction.** Starting from $\pi_0$, run $P$ forward for $L_{\mathrm{hub}}$ steps to obtain a *hub* state $$
-X^{*} \;\sim\; P^{L_{\mathrm{hub}}}(\pi_0, \cdot).
-$$ From $X^{*}$, generate $M$ conditionally independent *spokes* $$
-Y^{(1)}, \ldots, Y^{(M)} \;\stackrel{\text{i.i.d.}}{\sim}\; P^{L_{\mathrm{spoke}}}(X^{*}, \cdot).
-$$ Under $H_0$ and the reversibility of $P$ with respect to $\rho_{\mathcal{C}}$, the joint law of $(\pi_0, X^{*})$ is identical to that of $(X^{*}, \pi_0)$, so $\pi_0$ given $X^{*}$ has the same distribution as each $Y^{(j)}$ given $X^{*}$. Consequently $(\pi_0, Y^{(1)}, \ldots, Y^{(M)})$ is exchangeable conditional on $X^{*}$, and the rank of any test statistic $T$ evaluated at $\pi_0$ within this $(M+1)$-tuple is uniform on $\{1, \ldots, M+1\}$.
+**Construction.** Starting from $\pi_0$, run $P$ forward for $L_{\mathrm{hub}}$ steps to obtain a *hub* state $$X^{*} \;\sim\; P^{L_{\mathrm{hub}}}(\pi_0, \cdot).$$ From $X^{*}$, generate $M$ conditionally independent *spokes* $$Y^{(1)}, \ldots, Y^{(M)} \;\stackrel{\text{i.i.d.}}{\sim}\; P^{L_{\mathrm{spoke}}}(X^{*}, \cdot).$$ Under $H_0$ and the reversibility of $P$ with respect to $\rho_{\mathcal{C}}$, the joint law of $(\pi_0, X^{*})$ is identical to that of $(X^{*}, \pi_0)$, so $\pi_0$ given $X^{*}$ has the same distribution as each $Y^{(j)}$ given $X^{*}$. Consequently $(\pi_0, Y^{(1)}, \ldots, Y^{(M)})$ is exchangeable conditional on $X^{*}$, and the rank of any test statistic $T$ evaluated at $\pi_0$ within this $(M+1)$-tuple is uniform on $\{1, \ldots, M+1\}$.
 
-The lower-tail Besag-Clifford $p$-value is therefore $$
-\widehat{p}_{\text{low}}(T) \;=\; \frac{\bigl|\{j : T(Y^{(j)}) \leq T(\pi_0)\}\bigr| + 1}{M + 1},
-\tag{5}
-$$ and satisfies $\Pr_{H_0}\bigl(\widehat{p}_{\text{low}}(T) \leq \alpha\bigr) \leq \alpha$ for every $\alpha \in \{1/(M{+}1), 2/(M{+}1), \ldots\}$. The upper-tail expression is analogous. Crucially, the argument requires only reversibility of $P$ with respect to $\rho_{\mathcal{C}}$; it places no requirement on $L_{\mathrm{hub}}$ or $L_{\mathrm{spoke}}$.
+The lower-tail Besag-Clifford $p$-value is therefore $$\widehat{p}_{\text{low}}(T) \;=\; \frac{\bigl|\{j : T(Y^{(j)}) \leq T(\pi_0)\}\bigr| + 1}{M + 1},
+\tag{5}$$ and satisfies $\Pr_{H_0}\bigl(\widehat{p}_{\text{low}}(T) \leq \alpha\bigr) \leq \alpha$ for every $\alpha \in \{1/(M{+}1), 2/(M{+}1), \ldots\}$. The upper-tail expression is analogous. Crucially, the argument requires only reversibility of $P$ with respect to $\rho_{\mathcal{C}}$; it places no requirement on $L_{\mathrm{hub}}$ or $L_{\mathrm{spoke}}$.
 
 **Hyperparameter selection.** The validity of (5) is independent of $L_{\mathrm{hub}}$, $L_{\mathrm{spoke}}$, and $M$, but each affects either resolution or power.
 
@@ -351,6 +311,8 @@ $$ and satisfies $\Pr_{H_0}\bigl(\widehat{p}_{\text{low}}(T) \leq \alpha\bigr) \
 
 ## Ecological Inference Layer Implementation
 
+Figure depicts the highest and lowest ecological inference point estimates of each racial group's support for the Democratic nominee across 3 Texas-statewide 2024 general elections (President,U.S. Senate, and Railroad Commissioner).
+
 ![The highest and lowest EI point estimates for each racial group's support of the 3 Democratic nominees in statewide general elections: White (19–24%), AMIN (63–74%), Hispanic (66–72%), Asian (88–90%), and Black (95–96%).](figures/ei_dem_support_ranges.png)
 
 ![f distributions](figures/bc_calibrated_F_distributions_TX_BC_functional.png)
@@ -359,8 +321,9 @@ $$ and satisfies $\Pr_{H_0}\bigl(\widehat{p}_{\text{low}}(T) \leq \alpha\bigr) \
 
 ![black opportunity heatmap](figures/heatmap_black_opportunity_TX_BC_functional.png)
 
-![heatmap latino](figures/heatmap_latino_opportunity_TX_BC_functional.png)
-![](figures/map_compare_enacted_vs_best_O_L_TX_BC_functional.png)
+![heatmap latino](figures/heatmap_latino_opportunity_TX_BC_functional.png) ![](figures/map_compare_enacted_vs_best_O_L_TX_BC_functional.png) \# Discussion
+
+#Conclusion
 
 # License
 

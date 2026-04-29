@@ -39,7 +39,7 @@ Negative racial gerrymandering dilutes minority voting power by engineering dist
 
 Unfortunately, this practice has materialized throughout U.S. history. For instance, in response to black Americans obtaining the right to vote in 1870, Reconstruction-era Redeemer Southern Democrats wielded negative racial gerrymandering to preserve white supremacy and curtail black political power [@valelly2004two].
 
-This distortion produces legislatures that are less representative—often whiter and more ideologically extreme than the electorate—and weakens elected officials’ incentives to respond to minority interests.
+This distortion produces legislatures that are less representative - often whiter and more ideologically extreme than the electorate - and weakens elected officials’ incentives to respond to minority interests.
 
 By breaking the link between voting and representation, negative racial gerrymandering undermines democratic legitimacy, erodes trust, and contributes to lower turnout and political disengagement.
 
@@ -56,7 +56,9 @@ In the Thornburg v. Gingles case, the Supreme Court established a framework for 
 The U.S. Supreme Court refers to this framework as "the Gingles framework" [@allen_milligan_2023]. For the last 40 years, claims of negative racial gerrymandering in violation of Section 2 of the Voting Rights Act have been assessed via the Gingles framework [@allen_milligan_2023]. In the 2023 Allen v. Milligan decision, the U.S. Supreme Court reaffirmed the validity of the Gingles framework [@allen_milligan_2023].
 
 ## 1.6 Current Mid-Decade Redistricting Efforts
-Texas was the first to act. Reacting to pressure from the Trump administration to expand the Republican congressional delegation, the Texas Legislature convened a special session and, following a House Democratic quorum break, enacted a map expected to add flip 5 Congressional seats from Democrat to Republican [@goodman2025texasmap]. 
+Starting in 2025, a coordinated wave of mid-decade redistricting efforts has emerged. The Congressional Research Service has documented that lawmakers in California, Missouri, North Carolina, Ohio, Texas, and Utah enacted ahead of the 2026 midterm elections, with additional states actively considering following in their footsteps [@whitaker2026redistricting].
+
+Texas initiated this mid-decade redistricting wave. Reacting to pressure from the Trump administration to expand the Republican congressional delegation, the Texas Legislature convened a special session and, following a House Democratic quorum break, enacted a map expected to add flip 5 Congressional seats from Democrat to Republican [@goodman2025texasmap]. Texas' plan faced so many accusations of negative racial gerrymandering that this escalated to the U.S. Supreme Court in LULAC v. Abbott [@lulac2025]. It should be noted, however, that when the U.S. Supreme Court issued a stay order for the case, the Texas map was permitted to be enacted into law.
 
 # Related Work {#sec:related}
 

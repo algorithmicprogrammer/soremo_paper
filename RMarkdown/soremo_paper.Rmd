@@ -114,13 +114,21 @@ Each ecological inference run generates a large random sample of estimated vote 
 
 ## 2.3 Ensemble-Based Outlier Analysis in Redistricting {#sec:ensemble-related}
 
-### Recombination Markov Chains {#sec:recom}
+Recent methods for analyzing and comparing district plans attempt to do so by placing a plan in the context of valid alternatives - that is, those that cut up the same jurisdiction by the same rules and with the structural features of the geography and the pattern of voting held constant [@deford2021recombination]. These ensembles contain samples from the full space of plans, aiming to help compare a plan's properties to the range of possible designs [@deford2021recombination]. 
 
-The early ensembles relied on flip-based Markov chains, which propose single-precinct boundary changes between adjacent districts. Flip chains have well-understood detailed balance with respect to a known target measure but mix poorly on real precinct graphs: the proposal kernel changes the partition only marginally per step, and the chain remains correlated with its starting state for chain lengths far beyond what is computationally feasible.
+In one powerful application, ensembles have been used to conduct outlier analysis, or to argue that a proposed plan has properties that are extreme relative to the comparison statistics of alternative plans [@deford2021recombination]. Arguments like this have featured in a string of recent legal challenges to gerrymanders, all of which were successful at the district court or Supreme Court level [@deford2021recombination]. Outliers have also recieved significant attention from the U.S. Supreme Court (culminating in Rucho v. Common Cause [@rucho2019]) [@deford2021recombination]. Today, ensemble-based outlier analysis is considered the dominant empirical tool to evaluate gerrymandering claims in court.
 
-In 2021, Daryl DeFord, Moon Duchin, and Justin Solomon set forth recombination, a novel family of Markov chains intended for the ensemble generation of alternative redistricting plans [@deford2021recombination]. Recombination is widely considered to be the standard engine for district plan ensemble generation in the redistricting space [@BeckerDuchinGoldHirsch2021].
+The way ensemble-based outlier analysis works is that an enacted district plan $\pi_0$ is compared against a large sample of alternative plans from a neutral baseline distribution. The relative position of $\pi_0$ within the ensemble is offered as evidence of atypicality. This methodology was introduced by redistricting expert Jowei Chen in the mid-2010s [@chen_rodden_2013].
 
-— which proposes whole-district swaps via uniform spanning-tree bipartition of merged adjacent districts — represented a substantial advance in proposal mobility and is now the field's default kernel. The MGGG case studies on Virginia, Massachusetts, and Pennsylvania (Duchin et al., 2018, 2019) and the GerryChain software library that emerged from this work have established ReCom's position as the standard tool for redistricting ensemble generation.
+### 2.3.1 Recombination Markov Chains {#sec:recom}
+
+Early implementations of ensemble-based outlier analysis leveraged flip-based Markov chains [@deford2021recombination]. However, these were discovered to be problematic for several reasons.
+
+In 2021, Daryl DeFord, Moon Duchin, and Justin Solomon set forth recombination (ReCom), a novel family of Markov chains intended for the ensemble generation of alternative redistricting plans [@deford2021recombination]. Recombination is widely considered to be the standard engine for district plan ensemble generation in the redistricting space [@BeckerDuchinGoldHirsch2021].
+
+Recombination chains are considered to be superior to flip chains because they produce more compact districts, whereas flip chains are said to produce "winding, fractal-like districts" [@deford2021recombination]. Also, Recom performs much faster than flip becuase flip can only change the assignment label of a few nodes at a time [@deford2021recombination].
+
+The way a Markov chain works is it proposes whole-district swaps via uniform spanning tree bipartitions of merged adjacent districts [@deford2021recombination].
 
 ### The Mixing-Time Problem {#sec:mixing}
 

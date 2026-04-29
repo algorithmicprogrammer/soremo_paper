@@ -23,13 +23,17 @@ biblio-style: unsrtnat
 
 A modular computational framework for $\S2$ Voting Rights Act is introduced which integrates geospatial data engineering, Bayesian ecological inference, and ensemble generation. Prior work has developed these components individually, existing approaches lack a unified pipeline that propagates uncertainty from voter behavior estimation through plan-level evaluation. A probabilistic notion of minority electoral opportunity is formalized. A case study of Texas congressional districts illustrates how the framework can be used to assess whether an enacted plan systematically dilutes minority voting power.
 
-# Introduction {#sec:intro}
+# 1 Introduction {#sec:intro}
 
-## Gerrymandering {#sec:gerry}
+## 1.1 Redistricting
+
+## 1.2 The Redistricting Process in the United States
+
+## 1.3 Gerrymandering {#sec:gerry}
 
 Gerrymandering is a tactic that has been interwoven with United States politics since at least 1812, which is when the term was first coined [@sauer1992geography]. In simplest terms, gerrymandering can be defined as the manipulation of election district maps to either favor or disfavor a group of people (i.e. a political party, a racial/ethnic group, a socioeconomic class, etc).
 
-## Negative Racial Gerrymandering {#sec:racial-gerry}
+## 1.4 Negative Racial Gerrymandering {#sec:racial-gerry}
 
 Negative racial gerrymandering dilutes minority voting power by engineering districts in which minority ballots systematically matter less. Although minority voters retain the formal right to vote, they lack proportional influence.
 
@@ -39,7 +43,7 @@ This distortion produces legislatures that are less representative—often white
 
 By breaking the link between voting and representation, negative racial gerrymandering undermines democratic legitimacy, erodes trust, and contributes to lower turnout and political disengagement.
 
-## The Legality of Negative Racial Gerrymandering {#legality}
+## 1.5 The Legality of Negative Racial Gerrymandering {#legality}
 
 Negative racial gerrymandering is illegal in the United States by virtue of the Equal Protection Clause of the Fourteenth Amendment and Section 2 of the Voting Rights Act.
 
@@ -50,6 +54,9 @@ Section 2 of the Voting Rights Act of 1965 precludes states and political entiti
 In the Thornburg v. Gingles case, the Supreme Court established a framework for minority voters to be able to prove negative racial gerrymandering in violation of Section 2 of the Voting Rights Act in a court of law [@thornburg1986gingles]. Under this framework, plantiffs must be able to prove the following: (1) a "geographically insular" minority group makes up the majority population of a district, (2) the minority group is "politically cohesive", and (3) the "bloc voting majority" is usually able to defeat the minority group's preferred candidates [@thornburg1986gingles]. The second and third preconditions are stated by the U.S. Supreme Court as concerning "racially polarized voting" [@allen_milligan_2023].
 
 The U.S. Supreme Court refers to this framework as "the Gingles framework" [@allen_milligan_2023]. For the last 40 years, claims of negative racial gerrymandering in violation of Section 2 of the Voting Rights Act have been assessed via the Gingles framework [@allen_milligan_2023]. In the 2023 Allen v. Milligan decision, the U.S. Supreme Court reaffirmed the validity of the Gingles framework [@allen_milligan_2023].
+
+## 1.6 Current Mid-Decade Redistricting Efforts
+Texas was the first to act. Reacting to pressure from the Trump administration to expand the Republican congressional delegation, the Texas Legislature convened a special session and, following a House Democratic quorum break, enacted a map expected to add flip 5 Congressional seats from Democrat to Republican [@goodman2025texasmap]. 
 
 # Related Work {#sec:related}
 

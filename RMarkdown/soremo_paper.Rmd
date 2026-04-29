@@ -287,7 +287,7 @@ The lower-tail Besag-Clifford $p$-value is therefore $$\widehat{p}_{\text{low}}(
 5.  Texas Voting Tabulation District Shapefile
 6.  State VTDs Election Data
 
-Table \@ref(tab:tx-demographics) summarizes the resulting statewide demographic shares.
+Table 1 below summarizes the resulting statewide demographic shares.
 
 ```{r tx-demographics, echo=FALSE}
 knitr::kable(
@@ -302,7 +302,7 @@ knitr::kable(
 )
 ```
 
-The election inventory comprises six 2024 statewide contests (Table \@ref(tab:tx-elections)).
+As shown in Table 2 below, the election inventory comprises six 2024 statewide contests.
 
 ```{r tx-elections, echo=FALSE}
 knitr::kable(

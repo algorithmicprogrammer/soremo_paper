@@ -80,17 +80,17 @@ Their convention for categorizing racial groups involves adopting these group na
 
 It is emphasized that anyone who identifies as black should be grouped into the black population [@mggg_vap_cvap]. In other words, the black population should encompass those who are "Any-Part Black" or "Black Alone or in Combination", as opposed to just "Black Alone" or "Single-Race Black" [@mggg_vap_cvap].
 
-Then, of the individuals left, the Hispanic population must encompass all individuals who identify as Hispanic in the same way the Black population does [@mggg_vap_cvap]. Next, of those left, the Asian population should capture all who identify as Asian or Native Hawaiin Pacific Islander, so as to represent an AAPI category [@mggg_vap_cvap]. Finally, the same logic is used to construct the AMIN, Other, and White categories [@mggg_vap_cvap].
+Then, of the individuals left, the Hispanic population must encompass all individuals who identify as Hispanic in the same way the Black population does [@mggg_vap_cvap]. Next, of those left, the Asian population should capture all who identify as Asian or Native Hawaiian Pacific Islander, so as to represent an AAPI category [@mggg_vap_cvap]. Finally, the same logic is used to construct the AMIN, Other, and White categories [@mggg_vap_cvap].
 
-Thereafter, source <data:pl94> in Section sec:datasources is leveraged to generate voting age population as sums of census variables [@mggg_vap_cvap].
+Thereafter, the Decennial Census Redistricting PL 94-171 dataset is leveraged to generate voting age population as sums of census variables [@mggg_vap_cvap].
 
-Subsequently, Source \ref{data:cvap} in $\S$\@ref(datasources) is analyzed. The problem is, CVAP data from the ACS must be analyzed at the census block level because the base unit of the Decennial Census PL 94-171 data is the census block. In the primary tables, ACS is reported at the census tract level, which presents a problem because that is a significantly higher level of aggregation than the census block [@mggg_vap_cvap].
+Subsequently, the Citizen Age Voting Population (CVAP) by Race and Ethnicity, a special tabulation from the 5-year American Community Survey, is analyzed. The problem is, CVAP data from the ACS must be analyzed at the census block level because the base unit of the Decennial Census PL 94-171 data is the census block. In the primary tables, ACS is reported at the census tract level, which presents a problem because that is a significantly higher level of aggregation than the census block [@mggg_vap_cvap].
 
 Fortunately, the Data and Democracy Lab has introduced a solution to this problem called "discounting" [@mggg_vap_cvap]. Discounting refers to the usage of the tract-level ACS data to estimate the citizenship rates of racial groups, then applying the discount to the voting age population [@mggg_vap_cvap].
 
-An example of "discounting" provided by the Data and Democracy Lab is depicted in Equation\~\ref{eq:discounting}; in this example, block X belongs to tract Y in state Z and BCVAP is estimated by taking the citizenship rate for the group in the tract and applying it to the voting ager population in the block [@mggg_vap_cvap]. $$\frac{BCVAP_{ACS}(tract \: Y)}{BVAP_{ACS}(tract \: Y)} \times BVAP_{PL}(block \: X) = BCVAP(block \: X)$$
+An example of "discounting" provided by the Data and Democracy Lab is depicted below; in this example, block X belongs to tract Y in state Z and BCVAP is estimated by taking the citizenship rate for the group in the tract and applying it to the voting ager population in the block [@mggg_vap_cvap]. $$\frac{BCVAP_{ACS}(tract \: Y)}{BVAP_{ACS}(tract \: Y)} \times BVAP_{PL}(block \: X) = BCVAP(block \: X)$$
 
-If the denominator in an equation like Equation\~\ref{eq:discounting} is too low, then the Data and Democracy Lab proposes a solution like that in Equation\~\ref{eq:discounting_fix}. This involves swapping in the citizenship rate given that the tract did not allow for a meaningful estimate [@mggg_vap_cvap].
+If the denominator in an equation like the one above is too low, then the Data and Democracy Lab proposes a solution like the one below. This involves swapping in the citizenship rate given that the tract did not allow for a meaningful estimate [@mggg_vap_cvap].
 
 $$\frac{BCVAP_{ACS}(state \: Z)}{BVAP_{ACS}(state \: Z)} \times BVAP_{PL}(block \: X) = BCVAP(block \: X)$$
 
@@ -98,7 +98,7 @@ The Data and Democracy Lab acknowledges that this is a "crude fix", but states t
 
 ## 2.2 Ecological Inference {#sec:ei}
 
-To reiterate what is stated in $\S$\@ref(legality), in order to prove a violation of $\S2$ of the Voting Rights Act under the Gingles framework,plaintiffs must prove that the majority votes as a bloc to defeat minority-preferred candidates [@thornburg1986gingles]. Hence, any framework performing $\S2$ Voting Rights Act analysis must encompass identification of minority-preferred political candidates [@BeckerDuchinGoldHirsch2021].
+To reiterate what is stated in Section 1.5, in order to prove a violation of $\S2$ of the Voting Rights Act under the Gingles framework,plaintiffs must prove that the majority votes as a bloc to defeat minority-preferred candidates [@thornburg1986gingles]. Hence, any framework performing $\S2$ Voting Rights Act analysis must encompass identification of minority-preferred political candidates [@BeckerDuchinGoldHirsch2021].
 
 In state election return datasets, vote totals for political candidates are not computed by race, meaning that direct computation of minority-preferred candidates is impossible [@BeckerDuchinGoldHirsch2021]. This is where ecological inference - the de-facto solution for determining racially polarized voting - comes in. After all, ecological inference is widely regarded as "the best and often only hope of making progress" when it comes to extracting clues about individual behavior from group or aggregate-level data [@king2004ecological].
 

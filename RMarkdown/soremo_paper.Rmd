@@ -133,7 +133,16 @@ The way a Markov chain works is it proposes whole-district swaps via uniform spa
 ### 2.3.2 The Mixing-Time Problem {#sec:mixing}
 Ensemble-based inference tests rely on the premise that the Markov chain has run long enough for the sampled plans to be approximately representative of the target distribution. The validity of any p-value derived from a single long chain depends on this premise holding. Existing work defends the premise to convergence diagnostics - running multiple chains from different starting points, comparing summary statistics across chains, and monitoring autocorrelation in test statistics over chain length.These diagnostics are necessary but not sufficient because they cannot certify convergence and they offer no formal bound on the bias they fail to detect. 
 
-The underlying difficulty is that the mixing time of ReCom on real-world precinct graphs remains unknown, and it is not known to be polynomial in any rigorous sense. Cannon et al. establish that although the spanning tree distribution targeted by ReCom is well-defined and the kernel approximately converges to it, there exists a residual gap between the measures of the uniform spanning tree aprroximation actually implemented and the exact spanning tree [@cannon2022voting].They also state that polynomial mixing remains conjectural even on well-behaved graphs [@cannon2022voting].
+The underlying difficulty is that the mixing time of ReCom on real-world precinct graphs remains unknown, and it is not known to be polynomial in any rigorous sense. Cannon et al. establish that although the spanning tree distribution targeted by ReCom is well-defined and the kernel approximately converges to it, there exists a residual gap between the measures of the uniform spanning tree aprroximation actually implemented and the exact spanning tree [@cannon2022voting].They also state that polynomial mixing remains conjectural even on well-behaved graphs [@cannon2022voting]. Likewise, Daryl DeFord, Moon Duchin, and Justin Solomon characterize convergence on practical graphs as an empirical question rather than a settled theoretical result [@deford2021recombination].
+
+Hence, every ensemble-based p-value reported in redistricting literature is only valid if the chain has mixed. In Rucho v. Common Cause, ensemble-based outlier analysis was called into question  since the underlying chain's convergence properties are not formally established [@rucho2019].
+
+### 2.3.3 Approaches to the Mixing Time Problem
+Three responses to the mixing problem has appeared in literature.
+
+The most dominant approach in applied work is more compute - that is, longer chains, more starting points, and more elaborate diagnostics. However, this is not a true solution because the result is still not valid unless the chain is mixed and no amount of empirical convergence diagnostic can rule out a slow-mixing pathology that the diagnostic is not designed to detect.
+
+Cannon et al. introduced the second approach: short bursts [@cannon2022voting].Short bursts sacrifice ensemble representativeness to optimize over plans satisfying particular criteria [@cannon2022voting].Although short bursts are excellent for detecting extreme plans, they are not intended for inferential testing of an enacted plan against a neutral baseline [@cannon2022voting].
 
 # The Framework {#sec:framework}
 

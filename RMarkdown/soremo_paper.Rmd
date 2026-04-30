@@ -21,7 +21,10 @@ biblio-style: unsrtnat
 
 # Abstract
 
-A modular computational framework for $\S2$ Voting Rights Act is introduced which integrates geospatial data engineering, Bayesian ecological inference, and ensemble generation. Prior work has developed these components individually, existing approaches lack a unified pipeline that propagates uncertainty from voter behavior estimation through plan-level evaluation. A probabilistic notion of minority electoral opportunity is formalized. A case study of Texas congressional districts illustrates how the framework can be used to assess whether an enacted plan systematically dilutes minority voting power.
+Section 2 of the Voting Rights Act prohibits redistricting practices that dilute the votes of a racial or ethnic minority. The evidentiary standard set by the Gingles framework requires statistical demonstration of racially polarized voting and of differential electoral opportunity across alternative plans. The components of this evidentiary chain (geospatial data preparation, ecological inference, and ensemble-based outlier analysis) have been developed extensively but largely independently of one another. A
+modular computational framework that integrates the three components into a single pipeline in which posterior uncertainty from the ecological-inference stage propagates through to plan-level opportunity scoring. We formalize a probabilistic notion of minority electoral opportunity, anchored in a
+functional that admits an axiomatic justification, and we use the Besag-Clifford parallel construction to obtain exact p-values from a Recombination Markov chain regardless of mixing time. A case study of the
+enacted Texas congressional plan PLANC2333 illustrates how the framework detects systematic dilution of Black and Latino voting power, with Besag-Clifford p-values at or near the resolution floor of $10^{-3}$ on every opportunity functional examined.
 
 # 1 Introduction {#sec:intro}
 
@@ -152,6 +155,9 @@ The most influential framework for quantifying minority was introduced by Becker
 This "effectiveness score" is then thresholded to count "opportunity districts" [@BeckerDuchinGoldHirsch2021]. For example, a district is considered to be "Latino effective" if $S^{L}_{D}$ exceeds a cutoff (typically 0.5 or 0.6), and the count of the districts is the plan's opportunity score [@BeckerDuchinGoldHirsch2021]. This thresholding step is the pressure point of existing literature. There are two major issues with this. The first is that the threshold is theoretically arbitrary; in other words, there is no principled reason to choose 0.5 over 0.6 or vice versa. The second issue is that the threshold is fragile near the cutoff point. For example, a district with $s^{d}_{g}=0.59$ counts for nothing while a district with $s^{d}_{g}=0.61$ counts in full, even though these two districts are almost identical electorally. This fragility is especially evident in situations when the effectiveness scores cluster near the cutoff.
 
 The natural alternative introduced in each paper is to stop thresholding altogether and allowing the per-district win probability $p_{d}^{g}$ enter the plan-level function directly: $O_{g}(\pi) = \sum_{d} p_{d}^{g} (\pi)$, the expected number of districts where racial group $g$'s preferred candidate won. This functonal has been informally suggested in the literature, but it has not been adopted as the basis for a formal inferential test.
+
+# 3 Contribution
+The components surveyed in Section 2 ($R \times C$ ecological inference, and ensemble generation) exist as separately developed and well-documented tools. However, there is currently no published framework 
 
 # The Framework {#sec:framework}
 

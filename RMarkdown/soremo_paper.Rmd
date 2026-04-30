@@ -21,17 +21,16 @@ biblio-style: unsrtnat
 
 # Abstract
 
-Section 2 of the Voting Rights Act prohibits redistricting practices that dilute the votes of a racial or ethnic minority. The evidentiary standard set by the Gingles framework requires statistical demonstration of racially polarized voting and of differential electoral opportunity across alternative plans. The components of this evidentiary chain (geospatial data preparation, ecological inference, and ensemble-based outlier analysis) have been developed extensively but largely independently of one another. A
-modular computational framework that integrates the three components into a single pipeline in which posterior uncertainty from the ecological-inference stage propagates through to plan-level opportunity scoring. We formalize a probabilistic notion of minority electoral opportunity, anchored in a
-functional that admits an axiomatic justification, and we use the Besag-Clifford parallel construction to obtain exact p-values from a Recombination Markov chain regardless of mixing time. A case study of the
-enacted Texas congressional plan PLANC2333 illustrates how the framework detects systematic dilution of Black and Latino voting power, with Besag-Clifford p-values at or near the resolution floor of $10^{-3}$ on every opportunity functional examined.
+Section 2 of the Voting Rights Act prohibits redistricting practices that dilute the votes of a racial or ethnic minority. The evidentiary standard set by the Gingles framework requires statistical demonstration of racially polarized voting and of differential electoral opportunity across alternative plans. The components of this evidentiary chain (geospatial data preparation, ecological inference, and ensemble-based outlier analysis) have been developed extensively but largely independently of one another. A modular computational framework that integrates the three components into a single pipeline in which posterior uncertainty from the ecological-inference stage propagates through to plan-level opportunity scoring. We formalize a probabilistic notion of minority electoral opportunity, anchored in a functional that admits an axiomatic justification, and we use the Besag-Clifford parallel construction to obtain exact p-values from a Recombination Markov chain regardless of mixing time. A case study of the enacted Texas congressional plan PLANC2333 illustrates how the framework detects systematic dilution of Black and Latino voting power, with Besag-Clifford p-values at or near the resolution floor of $10^{-3}$ on every opportunity functional examined.
 
 # 1 Introduction {#sec:intro}
 
 ## 1.1 Redistricting
+
 Redistricting refers to the periodic redrawing of geographic boundaries that define electoral districts. Because most legislative bodies in democratic systems are comprised of elected representatives from specified constituencies, the lines that split up the districts determine which voters are grouped together, which communities share electoral representation, and which candidates and parties prevail in elections [@cain1985partisan].
 
 ## 1.2 The Redistricting Process in the United States
+
 Article I, Section 2 of the U.S. Constitution specifies how seats are apportioned in the House of Representatives among the states [@us_const_art1_sec2]. After the decennial U.S. census and apportionment is conducted, states usually initiate their redistricting processes, during which they formulate district boundaries accounting for population changes that occured during the past decade [@EckmanWhitaker2025MidDecade].
 
 Although redistricting processes are mostly determined by state laws, congressional district maps are required to comply with the the U.S. Constitution and federal law [@EckmanWhitaker2025MidDecade].
@@ -67,6 +66,7 @@ In the Thornburg v. Gingles case, the Supreme Court established a framework for 
 The U.S. Supreme Court refers to this framework as "the Gingles framework" [@allen_milligan_2023]. For the last 40 years, claims of negative racial gerrymandering in violation of Section 2 of the Voting Rights Act have been assessed via the Gingles framework [@allen_milligan_2023]. In the 2023 Allen v. Milligan decision, the U.S. Supreme Court reaffirmed the validity of the Gingles framework [@allen_milligan_2023].
 
 ## 1.6 Current Mid-Decade Redistricting Efforts
+
 Starting in 2025, a coordinated wave of mid-decade redistricting efforts has emerged. The Congressional Research Service has documented that lawmakers in California, Missouri, North Carolina, Ohio, Texas, and Utah enacted ahead of the 2026 midterm elections, with additional states actively considering following in their footsteps [@whitaker2026redistricting].
 
 Texas initiated this mid-decade redistricting wave. Reacting to pressure from the Trump administration to expand the Republican congressional delegation, the Texas Legislature convened a special session and, following a House Democratic quorum break, enacted a map expected to add flip 5 Congressional seats from Democrat to Republican [@goodman2025texasmap]. Texas' plan faced so many accusations of negative racial gerrymandering that this escalated to the U.S. Supreme Court in LULAC v. Abbott [@lulac2025]. It should be noted, however, that when the U.S. Supreme Court issued a stay order for the case, the Texas map was permitted to be enacted into law [@lulac_stay_2025].
@@ -117,7 +117,7 @@ Each ecological inference run generates a large random sample of estimated vote 
 
 ## 2.3 Ensemble-Based Outlier Analysis in Redistricting {#sec:ensemble-related}
 
-Recent methods for analyzing and comparing district plans attempt to do so by placing a plan in the context of valid alternatives - that is, those that cut up the same jurisdiction by the same rules and with the structural features of the geography and the pattern of voting held constant [@deford2021recombination]. These ensembles contain samples from the full space of plans, aiming to help compare a plan's properties to the range of possible designs [@deford2021recombination]. 
+Recent methods for analyzing and comparing district plans attempt to do so by placing a plan in the context of valid alternatives - that is, those that cut up the same jurisdiction by the same rules and with the structural features of the geography and the pattern of voting held constant [@deford2021recombination]. These ensembles contain samples from the full space of plans, aiming to help compare a plan's properties to the range of possible designs [@deford2021recombination].
 
 In one powerful application, ensembles have been used to conduct outlier analysis, or to argue that a proposed plan has properties that are extreme relative to the comparison statistics of alternative plans [@deford2021recombination]. Arguments like this have featured in a string of recent legal challenges to gerrymanders, all of which were successful at the district court or Supreme Court level [@deford2021recombination]. Outliers have also recieved significant attention from the U.S. Supreme Court (culminating in Rucho v. Common Cause [@rucho2019]) [@deford2021recombination]. Today, ensemble-based outlier analysis is considered the dominant empirical tool to evaluate gerrymandering claims in court.
 
@@ -134,13 +134,15 @@ Recombination chains are considered to be superior to flip chains because they p
 The way a Markov chain works is it proposes whole-district swaps via uniform spanning tree bipartitions of merged adjacent districts [@deford2021recombination].
 
 ### 2.3.2 The Mixing-Time Problem {#sec:mixing}
-Ensemble-based inference tests rely on the premise that the Markov chain has run long enough for the sampled plans to be approximately representative of the target distribution. The validity of any p-value derived from a single long chain depends on this premise holding. Existing work defends the premise to convergence diagnostics - running multiple chains from different starting points, comparing summary statistics across chains, and monitoring autocorrelation in test statistics over chain length.These diagnostics are necessary but not sufficient because they cannot certify convergence and they offer no formal bound on the bias they fail to detect. 
+
+Ensemble-based inference tests rely on the premise that the Markov chain has run long enough for the sampled plans to be approximately representative of the target distribution. The validity of any p-value derived from a single long chain depends on this premise holding. Existing work defends the premise to convergence diagnostics - running multiple chains from different starting points, comparing summary statistics across chains, and monitoring autocorrelation in test statistics over chain length.These diagnostics are necessary but not sufficient because they cannot certify convergence and they offer no formal bound on the bias they fail to detect.
 
 The underlying difficulty is that the mixing time of ReCom on real-world precinct graphs remains unknown, and it is not known to be polynomial in any rigorous sense. Cannon et al. establish that although the spanning tree distribution targeted by ReCom is well-defined and the kernel approximately converges to it, there exists a residual gap between the measures of the uniform spanning tree approximation actually implemented and the exact spanning tree [@cannon2022voting].They also state that polynomial mixing remains conjectural even on well-behaved graphs [@cannon2022voting]. Likewise, Daryl DeFord, Moon Duchin, and Justin Solomon characterize convergence on practical graphs as an empirical question rather than a settled theoretical result [@deford2021recombination].
 
-Hence, every ensemble-based p-value reported in redistricting literature is only valid if the chain has mixed. In Rucho v. Common Cause, ensemble-based outlier analysis was called into question  since the underlying chain's convergence properties are not formally established [@rucho2019].
+Hence, every ensemble-based p-value reported in redistricting literature is only valid if the chain has mixed. In Rucho v. Common Cause, ensemble-based outlier analysis was called into question since the underlying chain's convergence properties are not formally established [@rucho2019].
 
 ### 2.3.3 Approaches to the Mixing Time Problem
+
 Three responses to the mixing problem has appeared in literature.
 
 The most dominant approach in applied work is more compute - that is, longer chains, more starting points, and more elaborate diagnostics. However, this is not a true solution because the result is still not valid unless the chain is mixed and no amount of empirical convergence diagnostic can rule out a slow-mixing pathology that the diagnostic is not designed to detect.
@@ -150,6 +152,7 @@ Cannon et al. introduced the second approach: short bursts [@cannon2022voting].S
 The third approach to address this problem is to leverage an inferential framework that does not require mixing at all. In 1989, Julian Besag and Peter Clifford introduced two such frameworks for generalized Monte Carlo significance tests [@besag1989generalized]. The first is the serial method, where the test statistic's null distribution is conducted from a single chain via time-reversal arguments [@besag1989generalized]. The second method and the one adopted in this paper is the parallel method, where independent chains launched from a common state produce an exchangeable ensemble whose ranks are exactly uniform on the null [@besag1989generalized]. Neither of the two methods require the chain(s) to have mixed; the only requirement is reversibility of the kernel with respect to the target measure [@besag1989generalized]. Julian Besag and Peter Clifford's methods are well-established in spatial statistics, ecology, and image analysis, but have not been applied to redistricting ensembles.
 
 ### 2.3.4 Quantifying Minority Opportunity
+
 The most influential framework for quantifying minority was introduced by Becker et al. in 2021 [@BeckerDuchinGoldHirsch2021]. This approach combines ecological inference to estimate each racial group's candidate preferences, recency-weighted aggregation cycles across elections to smooth idiosyncratic single-election noise, and confidence weighted aggregation that downweights elections with diffused rather than polarized preferences [@BeckerDuchinGoldHirsch2021]. The output is a district-level "effectiveness score" $s_{d}^{g} \in [0,1]$ which measures the weighted share of recent elections in which a racial group $g$'s preferred candidate won [@BeckerDuchinGoldHircsh2021].
 
 This "effectiveness score" is then thresholded to count "opportunity districts" [@BeckerDuchinGoldHirsch2021]. For example, a district is considered to be "Latino effective" if $S^{L}_{D}$ exceeds a cutoff (typically 0.5 or 0.6), and the count of the districts is the plan's opportunity score [@BeckerDuchinGoldHirsch2021]. This thresholding step is the pressure point of existing literature. There are two major issues with this. The first is that the threshold is theoretically arbitrary; in other words, there is no principled reason to choose 0.5 over 0.6 or vice versa. The second issue is that the threshold is fragile near the cutoff point. For example, a district with $s^{d}_{g}=0.59$ counts for nothing while a district with $s^{d}_{g}=0.61$ counts in full, even though these two districts are almost identical electorally. This fragility is especially evident in situations when the effectiveness scores cluster near the cutoff.
@@ -157,20 +160,42 @@ This "effectiveness score" is then thresholded to count "opportunity districts" 
 The natural alternative introduced in each paper is to stop thresholding altogether and allowing the per-district win probability $p_{d}^{g}$ enter the plan-level function directly: $O_{g}(\pi) = \sum_{d} p_{d}^{g} (\pi)$, the expected number of districts where racial group $g$'s preferred candidate won. This functonal has been informally suggested in the literature, but it has not been adopted as the basis for a formal inferential test.
 
 # 3 Contribution
-The components surveyed in Section 2 ($R \times C$ ecological inference, and ensemble generation) exist as separately developed and well-documented tools. However, there is currently no published framework 
 
-# The Framework {#sec:framework}
+The components surveyed in Section 2 (that is, the redistricting data preparation, $R \times C$ ecological inference, and ensemble generation) exist as separately developed and well-documented tools. However, there is currently no published framework that integrates the three into one pipeline where posterior uncertainty from ecological inference propagates through to plan-level opportunity scoring and to the inferential test against an enacted plan. This paper supplies that integration. There are four specific contributions this paper offer.
 
-## Data Engineering Layer {#sec:data-layer}
+## 3.1 A Unified, Modular Pipeline
 
-### Data Sources {#datasources}
+An end-to-end pipeline is introduced that takes raw publicly available data sources (Decennial Census PL 94-171 Redistricting Data, ACS CVAP tabulations, state election returns, TIGER/LINE geographies) and produces a calibrated probability of minority electoral opportunity for every district in every plan. Modular in this context refers to the fact that each layer can be swapped out independently. For instance, improvements in the ecological inference layer do not require redoing the data engineering and ensemble generation & inference layer.
+
+## 3.2 Uncertainty Propagation Rather Than Point Estimates
+
+The ecological inference stage exports per-precinct, per-group, per-candidate octile quantiles of the posterior count distribution, and the ensemble stage Monte Carlo samples within those octile bins when scoring each candidate plan.The plan-level opportunity score therefore not only reflects variability among plans but also variability of voter-behavior in each plan. In contrast, in common practice, point estimates from ecological inference are passed downstream as if they were measured quantities.
+
+## 3.3 A Probabilistic Notion of Minoirty Opportunity
+
+The opportunity functional $O_{g} = \sum_{d} p_{d}^{g} (\pi)$ satisfies anonymity, district-additivity, monotonicity, and normalization.
+
+## 3.4 Exact Inference Under Unknown Mixing Time
+
+The mixing time problem associated with Recombination is sidestepped altogether via the Besag-Clifford parallel construction, which yields exact p-values regardless of how thoroughly the chain has mixed. Hence, \$\S\$2 Voting Rights Act analysis will no longer depend on unverifiable convergence claims and does this without modifying the recombination kernel itself.
+
+# 4 The Framework {#sec:framework}
+
+## 4.1 Data Engineering Layer {#sec:data-layer}
+
+### 4.1.1 Data Sources {#datasources}
+
+The data engineering layer ingests the following raw inputs:
 
 1.  State District Plan Shapefile
 2.  Decennial Census PL 94-171 Redistricting Dataset
-3.  Citizen Voting Age Population by Race and Ethnicity in a Special Tabulation from the ACS 5-Year Estimates
-4.  State Census Blocks Shapefile (TIGER/LINE)
-5.  State Voting Tabulation District Shapefile
-6.  State VTDs Election Data
+3.  Citizen Voting Age Population by Race and Ethnicity in a Special Tabulation from the ACS 5-Year Estimates 4. State Census Blocks Shapefile (TIGER/LINE)
+4.  State Voting Tabulation District Shapefile
+5.  State VTDs Election Data
+
+### 4.1.2 Data Engineering Layer Overview
+
+Figure 1 depicts the pipeline through which these raw data inputs are combined. The ingestion stage standardizes formats and projections. Construction of demographic categories follows the methodology outlined in Section 2.1.1. A geographic crosswalk allocates blocks to precincts by spatial intersection, after which keys are harmonized across the demographic and electoral sources, the unified dataset is assembled, and a final schema enforces derived proportion columns and consistent column names. 
 
 ![Overview of the data engineering layer.](figures/data_engineering_layer.png)
 
@@ -331,7 +356,6 @@ The lower-tail Besag-Clifford $p$-value is therefore $$\widehat{p}_{\text{low}}(
 
 ## Data Engineering Layer Implementation {#sec:case-data}
 
-
 1.  Texas PLANC2333 District Plan Shapefile
 2.  Decennial Census PL 94-171 Redistricting Dataset
 3.  Citizen Voting Age Population by Race and Ethnicity in a Special Tabulation from the ACS 5-Year Estimates
@@ -370,16 +394,11 @@ knitr::kable(
 
 ## Ecological Inference Layer Implementation {#sec:case-ei}
 
-We fit the $R \times C$ model of §\@ref(sec:ei-layer) to each contest in
-Table \@ref(tab:tx-elections) and report posterior support estimates,
-preference identifications, and per-precinct count posteriors at the octile
-resolution.
+We fit the $R \times C$ model of §\@ref(sec:ei-layer) to each contest in Table \@ref(tab:tx-elections) and report posterior support estimates, preference identifications, and per-precinct count posteriors at the octile resolution.
 
 ```{r ei-supports, fig.cap="Highest and lowest EI point estimates for each racial group's support of the 3 Democratic nominees in statewide general elections: White (19–24%), AMIN (63–74%), Hispanic (66–72%), Asian (88–90%), and Black (95–96%).", echo=FALSE}
 knitr::include_graphics("figures/ei_dem_support_ranges.png")
 ```
-
-
 
 ![f distributions](figures/bc_calibrated_F_distributions_TX_BC_functional.png)
 

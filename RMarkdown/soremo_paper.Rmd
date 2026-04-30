@@ -1,6 +1,6 @@
 ---
 title: "A Modular Computational Framework for Section 2 Voting Rights Act Analysis" 
-subtitle: "Socially Responsible Design, Modeling, and Computation, Spring 2026"
+subtitle: "Socially Responsible Modeling, Design & Computation, Spring 2026"
 author: 
   - Alicia Guerra, Illinois Institute of Technology^[[Contact the author](mailto:aguerra@hawk.illinoistech.edu).] 
 output:
@@ -143,6 +143,8 @@ Three responses to the mixing problem has appeared in literature.
 The most dominant approach in applied work is more compute - that is, longer chains, more starting points, and more elaborate diagnostics. However, this is not a true solution because the result is still not valid unless the chain is mixed and no amount of empirical convergence diagnostic can rule out a slow-mixing pathology that the diagnostic is not designed to detect.
 
 Cannon et al. introduced the second approach: short bursts [@cannon2022voting].Short bursts sacrifice ensemble representativeness to optimize over plans satisfying particular criteria [@cannon2022voting].Although short bursts are excellent for detecting extreme plans, they are not intended for inferential testing of an enacted plan against a neutral baseline [@cannon2022voting].
+
+The third approach to address this problem is to leverage an inferential framework that does not require mixing at all. In 1989, Julian Besag and Peter Clifford introduced two such frameworks for [@besag1989generalized]
 
 # The Framework {#sec:framework}
 

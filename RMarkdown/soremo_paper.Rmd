@@ -311,9 +311,15 @@ The fitted parameters $\{(\alpha_{m,g}, \beta_{m,g})\}$ are written to a nine-ro
 
 ### 4.3.1 Setup and Notation {#sec:ensemble-setup}
 
-The notation of Daryl DeFord, Moon Duchin, and Justin Solomon's foundational Recombination Markov chain paper is adopted here. A graph $G = (V,E)$ is constructed where $V$ is a set of vertices for each geographic unit (precincts, in this case) and $E$ is a set of edges between those geographic units that are geographically adjacent [@deford2021recombination]. Hence, a redistricting plan is a partition of the nodes of V into subsets that induce connected components of G [@deford2021recombination]. In this manner, redistricting can be reframed as a graph partitioning problem [@deford2021recombination]. Equivalently, a redistricting plan is an assignment of each node to one of $k$ districts via a labeling map $V \to {1, \cdots, k}$ [@deford2021recombination].
+The notation of Daryl DeFord, Moon Duchin, and Justin Solomon's foundational Recombination Markov chain paper is adopted here. A graph $G = (V,E)$ is constructed where $V$ is a set of vertices for each geographic unit (precincts, in this case) and $E$ is a set of edges between those geographic units that are geographically adjacent [@deford2021recombination]. Hence, a redistricting plan is a partition of the nodes of V into subsets that induce connected components of G [@deford2021recombination]. In this manner, redistricting can be reframed as a graph partitioning problem [@deford2021recombination]. Equivalently, a redistricting plan is an assignment of each node to one of $k$ districts via a labeling map $V \to \{1, \cdots, k\}$ [@deford2021recombination].
 
-So, to restate the above, $V = \{v_1, \ldots, v_N\}$ denotes the precincts in the state, with rook-adjacency graph $G = (V, E)$. Let $\pi$ be a redistricting plan be a partition $V \to {1, \cdots, K}$ of $K$ districts. Let the redistricting plan being analyzed be denoted as $\pi_0$.
+So, to restate the above, $V = \{v_1, \ldots, v_K\}$ denotes the precincts in the state, with rook-adjacency graph $G = (V, E)$. Let $\pi$ be a redistricting plan be a partition $V \to {1, \cdots, K}$ of $K$ districts. Let the redistricting plan being analyzed be denoted as $\pi_0$.
+
+In dual graphs derived from real-world data, nodes are weighted with populations or demographic data, which is represented with functions $w: V \to R$ [@deford2021recombination]. This notation enables the efficient expression of constraints [@deford2021recombination]. A condition that bounds population deviation can be modeled as 
+$$(1-\epsilon)\frac{\sum_{V}w(v)}{k} \leq |V_{i}| \leq (1 + \epsilon) \frac{\sum_{V}w(v)}{k}$$ 
+[@deford2021recombination].
+
+Let $\Pi_{k}(\epsilon)$ denote the set of redistricting plan where every district induces a connected subgraph and the population balance condition 
 
  Let $\Pi_K(\varepsilon)$ denote the set of plans for which (i) every district induces a connected subgraph, and (ii) the population-balance condition $|\mathrm{pop}(d) / (\mathrm{pop}_{\mathrm{tot}}/K) - 1| \leq \varepsilon$ holds for every $d$. We work throughout with $\varepsilon = 0.05$, the slack at which $\pi_0$ itself is a valid initial state under the precinct-vintage population column used here.
 

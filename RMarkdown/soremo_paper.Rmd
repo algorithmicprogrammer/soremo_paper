@@ -200,7 +200,7 @@ Figure 1 depicts the pipeline through which these raw data inputs are combined. 
 ![Overview of the data engineering layer.](figures/data_engineering_layer.png)
 
 ## 4.2 Ecological Inference Layer {#sec:ei-layer}
-We adopt a Bayesian multinomial--Dirichlet model:
+A Bayesian multinomial--Dirichlet model is adopted:
 
 $$
 \theta_{p,c} = \sum_{r=1}^{R} X_{p,r} \beta_{p,r,c},
@@ -212,6 +212,8 @@ $$
 . Posterior samples are used to compute group preferences, district-level win probabilities, and uncertainty distributions.
 
 The method Becker et al. leverage to record precinct-level probabilistic information in a condensed form is adopted here [@BeckerDuchinGoldHirsch2021].This method allows distributions to be recorded at every step of the Markov chain and involves compressing a histogram into octiles, storing only eight "bars" as opposed to "dozens of hundreds" [@BeckerDuchinGoldHirsch2021].
+
+The post-EI processing stage builds the calibration data, scores the enacted plan against labeled outcomes, and fits per-(mode, subgroup) logistic nideks tgat nao ecological inference output into district-level win probabilities.
 
 
 
@@ -373,7 +375,7 @@ knitr::kable(
 
 ## 5.2 Ecological Inference Layer Implementation {#sec:case-ei}
 
-The $R \times C$ model of Section 4.2 is fit to each contest in Table 2 and report posterior support estimates, preference identifications, and per-precinct count posteriors at the octile resolution.
+Figure 3 summarizes posterior support estimates for the three Democratic statewide nominees by racial group across the general elections. The posteriors recover sharp polarization. The roughly 70-point gap between Black and White support, and the roughly 50-point gap between Hispanic and White support, and comfortably above the polarization thresholds conventionally treated as evidence of racially polarized voting under the second and third Gingles preconditions.
 
 ```{r ei-supports, fig.cap="Highest and lowest EI point estimates for each racial group's support of the 3 Democratic nominees in statewide general elections: White (19–24%), AMIN (63–74%), Hispanic (66–72%), Asian (88–90%), and Black (95–96%).", echo=FALSE}
 knitr::include_graphics("figures/ei_dem_support_ranges.png")

@@ -195,11 +195,11 @@ The data engineering layer ingests the following raw inputs:
 
 ### 4.1.2 Data Engineering Layer Overview
 
-Figure 1 depicts the pipeline through which these raw data inputs are combined. The ingestion stage standardizes formats and projections. Construction of demographic categories follows the methodology outlined in Section 2.1.1. A geographic crosswalk allocates blocks to precincts by spatial intersection, after which keys are harmonized across the demographic and electoral sources, the unified dataset is assembled, and a final schema enforces derived proportion columns and consistent column names. 
+Figure 1 depicts the pipeline through which these raw data inputs are combined. The ingestion stage standardizes formats and projections. Construction of demographic categories follows the methodology outlined in Section 2.1.1. A geographic crosswalk allocates blocks to precincts by spatial intersection, after which keys are harmonized across the demographic and electoral sources, the unified dataset is assembled, and a final schema enforces derived proportion columns and consistent column names. Validation checks confirm that population sums match between sources and that no precinct is left without a district assignment.
 
 ![Overview of the data engineering layer.](figures/data_engineering_layer.png)
 
-## Ecological Inference Layer {#sec:ei-layer}
+## 4.2 Ecological Inference Layer {#sec:ei-layer}
 
 The ecological inference layer's first inferential stage converts observed precinct-level election returns and citizen voting-age population (CVAP) composition into group-conditional posterior distributions over vote choice. These distributions are the substrate on which all downstream Voting Rights Act opportunity scoring is built: they identify the minority-preferred candidates in each contest, they provide precinct-level posterior summaries of group-specific vote counts (used to construct district-level support estimates over the ensemble of plans), and they supply the raw scores to which a per-mode, per-group logistic calibration is fit.
 
@@ -260,7 +260,10 @@ $$\overline{n}_{p,r,c}
 X_{p,r}\,N_p\,
 \frac{1}{S}\sum_{s=1}^{S} \beta^{(s)}_{p,r,c}.$$
 
-**Precinct count octiles.** Within-precinct posterior uncertainty is preserved for downstream Monte Carlo by exporting eight octile quantiles of the group-specific count posterior, evaluated at the probabilities $\mathcal{Q} = \{k/8 : k = 1, \dots, 8\}$:
+**Precinct count octiles.** The method Becker et al. leverage to record precinct-level probabilistic information in a condensed form is adopted here [@BeckerDuchinGoldHirsch2021].This method allows distributions to be recorded at every step of the Markov chain and involves compressing a histogram into octiles, storing only eight "bars" as opposed to "dozens of hundreds" [@BeckerDuchinGoldHirsch2021].
+
+
+Within-precinct posterior uncertainty is preserved for downstream Monte Carlo by exporting eight octile quantiles of the group-specific count posterior, evaluated at the probabilities $\mathcal{Q} = \{k/8 : k = 1, \dots, 8\}$:
 
 $$Q_{p,r,c}(q)
 \;=\;
@@ -305,9 +308,11 @@ The fitted parameters $\{(\alpha_{m,g}, \beta_{m,g})\}$ are written to a nine-ro
 
 ![Overview of the ecological inference layer.](figures/ecological_inference_layer.png)
 
-## Ensemble Generation & Statistical Comparison Layer {#sec:ensemble-layer}
+## 4.3 Ensemble Generation & Inference Layer {#sec:ensemble-layer}
 
-### Setup and Notation {#sec:ensemble-setup}
+### 4.3.1 Setup and Notation {#sec:ensemble-setup}
+
+The notation of Daryl DeFord, Moon Duchin, and Justin Solomon's foundational Recombination Markov chain paper is adopted here. A graph $G = (V,E)$ is constructed where $V$ is a set of vertices for each geographic unit (precincts, in this case) and $E$ is a set of edges between those geographic units that are geographically adjacent [@deford2021recombination]. Hence, a redistricting plan is a partition of the nodes of V into subsets that induce connected components of G [@deford2021recombination]. In this manner, redistricting can be reframed as a graph partitioning problem [@deford2021recombination]. Equivalently, a redistricting plan is an assignment of each node to one of $k$ districts via a labeling map $V \to {1, \cdots, k}$ [@deford2021recombination].
 
 Let $V = \{v_1, \ldots, v_N\}$ denote the precincts in the state, with rook-adjacency graph $G = (V, E)$. A *plan* is a partition $\pi : V \to \{1, \ldots, K\}$ of $V$ into $K$ districts; the enacted Texas congressional plan ($K=38$) is denoted $\pi_0$. Let $\Pi_K(\varepsilon)$ denote the set of plans for which (i) every district induces a connected subgraph, and (ii) the population-balance condition $|\mathrm{pop}(d) / (\mathrm{pop}_{\mathrm{tot}}/K) - 1| \leq \varepsilon$ holds for every $d$. We work throughout with $\varepsilon = 0.05$, the slack at which $\pi_0$ itself is a valid initial state under the precinct-vintage population column used here.
 

@@ -157,7 +157,7 @@ The most influential framework for quantifying minority was introduced by Becker
 
 This "effectiveness score" is then thresholded to count "opportunity districts" [@BeckerDuchinGoldHirsch2021]. For example, a district is considered to be "Latino effective" if $S^{L}_{D}$ exceeds a cutoff (typically 0.5 or 0.6), and the count of the districts is the plan's opportunity score [@BeckerDuchinGoldHirsch2021]. This thresholding step is the pressure point of existing literature. There are two major issues with this. The first is that the threshold is theoretically arbitrary; in other words, there is no principled reason to choose 0.5 over 0.6 or vice versa. The second issue is that the threshold is fragile near the cutoff point. For example, a district with $s^{d}_{g}=0.59$ counts for nothing while a district with $s^{d}_{g}=0.61$ counts in full, even though these two districts are almost identical electorally. This fragility is especially evident in situations when the effectiveness scores cluster near the cutoff.
 
-The natural alternative introduced in each paper is to stop thresholding altogether and allowing the per-district win probability $p_{d}^{g}$ enter the plan-level function directly: $O_{g}(\pi) = \sum_{d} p_{d}^{g} (\pi)$, the expected number of districts where racial group $g$'s preferred candidate won. This functonal has been informally suggested in the literature, but it has not been adopted as the basis for a formal inferential test.
+The natural alternative introduced in each paper is to stop thresholding altogether and allowing the per-district win probability $p_{d}^{g}$ enter the plan-level function directly: $O_{g}(\pi) = \sum_{d} p_{d}^{g} (\pi)$, the expected number of districts where racial group $g$'s preferred candidate won. This functional has been informally suggested in the literature, but it has not been adopted as the basis for a formal inferential test.
 
 # 3 Contribution
 
@@ -313,21 +313,27 @@ The fitted parameters $\{(\alpha_{m,g}, \beta_{m,g})\}$ are written to a nine-ro
 
 The notation of Daryl DeFord, Moon Duchin, and Justin Solomon's foundational Recombination Markov chain paper is adopted here. A graph $G = (V,E)$ is constructed where $V$ is a set of vertices for each geographic unit (precincts, in this case) and $E$ is a set of edges between those geographic units that are geographically adjacent [@deford2021recombination]. Hence, a redistricting plan is a partition of the nodes of V into subsets that induce connected components of G [@deford2021recombination]. In this manner, redistricting can be reframed as a graph partitioning problem [@deford2021recombination]. Equivalently, a redistricting plan is an assignment of each node to one of $k$ districts via a labeling map $V \to \{1, \cdots, k\}$ [@deford2021recombination].
 
-So, to restate the above, $V = \{v_1, \ldots, v_K\}$ denotes the precincts in the state, with rook-adjacency graph $G = (V, E)$. Let $\pi$ be a redistricting plan be a partition $V \to {1, \cdots, K}$ of $K$ districts. Let the redistricting plan being analyzed be denoted as $\pi_0$.
+So, to restate the above, $V = \{v_1, \ldots, v_K\}$ denotes the precincts in the state, with rook-adjacency graph $G = (V, E)$. Let $\pi$ be a redistricting plan be a partition $V \to {1, \cdots, K}$ of $K$ districts. Let the enacted redistricting plan being analyzed be denoted as $\pi_0$.
 
-In dual graphs derived from real-world data, nodes are weighted with populations or demographic data, which is represented with functions $w: V \to R$ [@deford2021recombination]. This notation enables the efficient expression of constraints [@deford2021recombination]. A condition that bounds population deviation can be modeled as 
+In dual graphs derived from real-world data, nodes are weighted with populations or demographic data, which is represented with functions $w: V \to R$ [@deford2021recombination]. This notation enables the efficient expression of constraints [@deford2021recombination]. Let $\epsilon$ be a small population deviation greater than zero [@cannon2022spanning].
+
+A condition that bounds population deviation can be modeled as 
 $$(1-\epsilon)\frac{\sum_{V}w(v)}{k} \leq |V_{i}| \leq (1 + \epsilon) \frac{\sum_{V}w(v)}{k}$$ 
 [@deford2021recombination].
 
-Let $\Pi_{k}(\epsilon)$ denote the set of redistricting plan where every district induces a connected subgraph and the population balance condition 
+Let $\Pi_{k}(\epsilon)$ denote the set of redistricting plan where every district induces a connected subgraph and the population balance condition holds for every district $d$.
 
- Let $\Pi_K(\varepsilon)$ denote the set of plans for which (i) every district induces a connected subgraph, and (ii) the population-balance condition $|\mathrm{pop}(d) / (\mathrm{pop}_{\mathrm{tot}}/K) - 1| \leq \varepsilon$ holds for every $d$. We work throughout with $\varepsilon = 0.05$, the slack at which $\pi_0$ itself is a valid initial state under the precinct-vintage population column used here.
+Let $\rho$ denote the spanning-tree measure on $\Pi_{k}(\varepsilon)$, 
 
-Let $\rho$ denote the *spanning-tree measure* on $\Pi_K(\varepsilon)$, $$\rho(\pi) \;\propto\; \prod_{d=1}^{K} \tau\bigl(G[\pi^{-1}(d)]\bigr),$$ where $\tau(H)$ is the number of spanning trees of subgraph $H$. This is the canonical neutral measure targeted by Recombination (ReCom) Markov chains [DeFord, Duchin, and Solomon, 2021; Cannon et al., 2022]. The hypothesis we test is $$H_0 : \pi_0 \sim \rho_{\mathcal{C}},$$ where $\rho_{\mathcal{C}}$ is $\rho$ restricted to a constraint subset $\mathcal{C} \subseteq \Pi_K(\varepsilon)$ encoding compactness and county-respect requirements (defined in §4.3). The test statistics are scalar functionals $T : \Pi_K(\varepsilon) \to \mathbb{R}$ measuring minority opportunity.
+$$\rho(\pi) \;\propto\; \prod_{d=1}^{K} \tau\bigl(G[\pi^{-1}(d)]\bigr),$$ 
+where $\tau(H)$ is the number of spanning trees of subgraph $H$ [@cannon2025sampling]. 
 
-The mixing time of practical ReCom kernels on real-world precinct graphs is unknown and conjecturally polynomial but slow. The inference procedure adopted below sidesteps this concern: validity holds *exactly*, regardless of mixing.
+The hypothesis we test is $$H_0 : \pi_0 \sim \rho_{\mathcal{C}},$$ where $\rho_{\mathcal{C}}$ is $\rho$ restricted to a constraint subset $\mathcal{C} \subseteq \Pi_{k}(\epsilon)$ encoding compactness and county-respect requirements [@deford2021recombination]. The test statistics are scalar functionals $T : \Pi_{k}(\varepsilon) \to \mathbb{R}$ measuring minority opportunity.
 
-### The Opportunity Functional {#sec:opportunity}
+
+Despite strong empirical performance, the mixing time of ReCom Markov chains on realistic precinct graphs is not theoretically characterized [@cannon2022voting]. As with many high-dimensional combinatorial Markov Chain Monte Carlo methods, polynomial mixing is conjectured but not proven [@levin2009markov], and convergence rates may be slow in practice. We sidestep this concern by adopting the inference procedure described below; upon leveraging this procedure, validity holds exactly regardless of mixing.
+
+### 4.3.2 The Opportunity Functional {#sec:opportunity}
 
 For each protected group $g \in \{B, L\}$ (Black, Latino), each plan $\pi$, and each district $d$, let $p_d^g(\pi) \in [0, 1]$ denote the model-based probability that group $g$'s preferred candidate prevails in district $d$. The probabilities $\{p_d^g(\pi)\}$ are produced by the scoring layer detailed in §3, which combines a row-by-column ecological-inference model of group-specific candidate preferences with recency-weighted election histories under three weighting schemes (statewide, equal, district). Primary results below use the *statewide* mode; results under the alternative modes are reported in Appendix [X].
 

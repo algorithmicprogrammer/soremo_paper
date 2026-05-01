@@ -262,7 +262,6 @@ X_{p,r}\,N_p\,
 
 **Precinct count octiles.** The method Becker et al. leverage to record precinct-level probabilistic information in a condensed form is adopted here [@BeckerDuchinGoldHirsch2021].This method allows distributions to be recorded at every step of the Markov chain and involves compressing a histogram into octiles, storing only eight "bars" as opposed to "dozens of hundreds" [@BeckerDuchinGoldHirsch2021].
 
-
 Within-precinct posterior uncertainty is preserved for downstream Monte Carlo by exporting eight octile quantiles of the group-specific count posterior, evaluated at the probabilities $\mathcal{Q} = \{k/8 : k = 1, \dots, 8\}$:
 
 $$Q_{p,r,c}(q)
@@ -314,7 +313,9 @@ The fitted parameters $\{(\alpha_{m,g}, \beta_{m,g})\}$ are written to a nine-ro
 
 The notation of Daryl DeFord, Moon Duchin, and Justin Solomon's foundational Recombination Markov chain paper is adopted here. A graph $G = (V,E)$ is constructed where $V$ is a set of vertices for each geographic unit (precincts, in this case) and $E$ is a set of edges between those geographic units that are geographically adjacent [@deford2021recombination]. Hence, a redistricting plan is a partition of the nodes of V into subsets that induce connected components of G [@deford2021recombination]. In this manner, redistricting can be reframed as a graph partitioning problem [@deford2021recombination]. Equivalently, a redistricting plan is an assignment of each node to one of $k$ districts via a labeling map $V \to {1, \cdots, k}$ [@deford2021recombination].
 
-Let $V = \{v_1, \ldots, v_N\}$ denote the precincts in the state, with rook-adjacency graph $G = (V, E)$. A *plan* is a partition $\pi : V \to \{1, \ldots, K\}$ of $V$ into $K$ districts; the enacted Texas congressional plan ($K=38$) is denoted $\pi_0$. Let $\Pi_K(\varepsilon)$ denote the set of plans for which (i) every district induces a connected subgraph, and (ii) the population-balance condition $|\mathrm{pop}(d) / (\mathrm{pop}_{\mathrm{tot}}/K) - 1| \leq \varepsilon$ holds for every $d$. We work throughout with $\varepsilon = 0.05$, the slack at which $\pi_0$ itself is a valid initial state under the precinct-vintage population column used here.
+So, to restate the above, $V = \{v_1, \ldots, v_N\}$ denotes the precincts in the state, with rook-adjacency graph $G = (V, E)$. Let $\pi$ be a redistricting plan be a partition $V \to {1, \cdots, K}$ of $K$ districts. Let the redistricting plan being analyzed be denoted as $\pi_0$.
+
+ Let $\Pi_K(\varepsilon)$ denote the set of plans for which (i) every district induces a connected subgraph, and (ii) the population-balance condition $|\mathrm{pop}(d) / (\mathrm{pop}_{\mathrm{tot}}/K) - 1| \leq \varepsilon$ holds for every $d$. We work throughout with $\varepsilon = 0.05$, the slack at which $\pi_0$ itself is a valid initial state under the precinct-vintage population column used here.
 
 Let $\rho$ denote the *spanning-tree measure* on $\Pi_K(\varepsilon)$, $$\rho(\pi) \;\propto\; \prod_{d=1}^{K} \tau\bigl(G[\pi^{-1}(d)]\bigr),$$ where $\tau(H)$ is the number of spanning trees of subgraph $H$. This is the canonical neutral measure targeted by Recombination (ReCom) Markov chains [DeFord, Duchin, and Solomon, 2021; Cannon et al., 2022]. The hypothesis we test is $$H_0 : \pi_0 \sim \rho_{\mathcal{C}},$$ where $\rho_{\mathcal{C}}$ is $\rho$ restricted to a constraint subset $\mathcal{C} \subseteq \Pi_K(\varepsilon)$ encoding compactness and county-respect requirements (defined in §4.3). The test statistics are scalar functionals $T : \Pi_K(\varepsilon) \to \mathbb{R}$ measuring minority opportunity.
 
@@ -357,9 +358,9 @@ The lower-tail Besag-Clifford $p$-value is therefore $$\widehat{p}_{\text{low}}(
 
 *Power.* $L_{\mathrm{hub}}$ and $L_{\mathrm{spoke}}$ govern dependence structure within the spoke ensemble. Small $L_{\mathrm{hub}}$ leaves $X^{*}$ and hence the spokes correlated with $\pi_0$, depressing power against alternatives near $\pi_0$ in the state graph; small $L_{\mathrm{spoke}}$ leaves spokes correlated with one another, inflating estimator variance for $\mathbb{E}_{\rho_{\mathcal{C}}}[O_g]$ and $\mathrm{Var}_{\rho_{\mathcal{C}}}(O_g)$. We take $L_{\mathrm{hub}} = 2000$ and $L_{\mathrm{spoke}} = 500$. The asymmetric ratio reflects that $X^{*}$ is generated once and shared across all spokes (so the unit cost of $L_{\mathrm{hub}}$ is amortized) while the per-spoke cost scales linearly in $L_{\mathrm{spoke}}$.
 
-# Case Study: Texas Congressional Districts {#sec:case-study}
+# 5 Case Study: Texas Congressional Districts {#sec:case-study}
 
-## Data Engineering Layer Implementation {#sec:case-data}
+## 5.1 Data Engineering Layer Implementation {#sec:case-data}
 
 1.  Texas PLANC2333 District Plan Shapefile
 2.  Decennial Census PL 94-171 Redistricting Dataset
@@ -397,7 +398,7 @@ knitr::kable(
 )
 ```
 
-## Ecological Inference Layer Implementation {#sec:case-ei}
+## 5.2 Ecological Inference Layer Implementation {#sec:case-ei}
 
 We fit the $R \times C$ model of §\@ref(sec:ei-layer) to each contest in Table \@ref(tab:tx-elections) and report posterior support estimates, preference identifications, and per-precinct count posteriors at the octile resolution.
 
@@ -411,16 +412,24 @@ knitr::include_graphics("figures/ei_dem_support_ranges.png")
 
 ![black opportunity heatmap](figures/heatmap_black_opportunity_TX_BC_functional.png)
 
-![heatmap latino](figures/heatmap_latino_opportunity_TX_BC_functional.png) ![](figures/map_compare_enacted_vs_best_O_L_TX_BC_functional.png) \# Discussion
+![heatmap latino](figures/heatmap_latino_opportunity_TX_BC_functional.png) ![](figures/map_compare_enacted_vs_best_O_L_TX_BC_functional.png)\
 
-#Conclusion
+# 6 Discussion
+
+## 6.1 Limitations
+
+This framework relies on several assumptions including approximate reversibility of the ReCom kernel, correct specification of the ecological inference model, accuracy of CVAP estimates, and representativeness of the selected elections. These limitations should be considered when interpreting results.
+
+# 7 Conclusion
+
+This paper introduces an exact inferential framework for redistricting analysis that eliminates reliance on Markov chain mixing assumptions. By combining Besag-Clifford inference with uncertainty-aware ecological modeling, a principled and statistically valid approach to evaluating redistricting plans is set forth.
 
 # License
 
-The authors retains copyright of their work.
+The author, Alicia Guerra, retains copyright of her work and reserves the right to submit to other journals.
 
 # Acknowledgements
 
-I am indebted to the SoReMo Initiative at my home institution, Illinois Institute of Technology, for funding my research. Dr. Sonja Petrović, founder of the SoReMo Initiative, has provided invaluable statistical insights. Dr. Robert Ellis, my advisor, has provided candid and thorough feedback throughout the formulation of this paper. Dr. Shahrzad (Sara) Jamshidi, my former statistical learning and Bayesian statistics professor, was instrumental in helping me get this project off the ground.
+I am indebted to the SoReMo Initiative at my home institution, Illinois Institute of Technology, for funding my research. Dr. Sonja Petrović, founder of the SoReMo Initiative, has provided invaluable statistical insights. Dr. Robert Ellis, my advisor, has provided candid and thorough feedback throughout the formulation of this paper. Dr. Shahrzad (Sara) Jamshidi, my former statistical learning and Bayesian statistics professor, was instrumental in helping me get this project off the ground. And my mentor, Dr. Tianxiang Lu, provided code review since the beginning of the project.
 
 # References

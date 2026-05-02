@@ -271,6 +271,12 @@ Here, it is argued that the minority opportunity functional $O_{g}$ is the uniqu
 
 **Axiom 4 (Normalization):** $0 \le T(\pi) \le K$, with the bounds attained when $p^g_d(\pi) = 0$ for all $d$ and $p^g_d(\pi) = 1$ for all $d$, respectively.
 
+**Proposition.** The functional $O_g(\pi) = \sum_d p^g_d(\pi)$ satisfies
+A1–A4. Moreover, any functional satisfying A1–A4 with district contribution
+$t(d, \pi)$ depending on $\pi$ only through $p^g_d(\pi)$ takes the form
+$T(\pi) = \sum_d \phi(p^g_d(\pi))$ for some weakly increasing $\phi: [0,1]
+\to [0,1]$ with $\phi(0) = 0$ and $\phi(1) = 1$.
+
 *Proof.* Anonymity follows because the sum is invariant under permutation of summands. District additivity holds with $t(d, \pi) = p^g_d(\pi)$. Monotonicity holds term-by-term. For normalization, $p^g_d(\pi) \in [0, 1]$ implies $0 \le \sum_d p^g_d(\pi) \le K$, with the bounds attained at the stated configurations.
 
 For the converse, Axiom 2 forces $T(\pi) = \sum_d t(d, \pi)$. The hypothesis that $t(d, \pi)$ depends on $\pi$ only through $p^g_d(\pi)$ writes $t(d, \pi) = \phi(p^g_d(\pi))$ for some $\phi$. Axiom 3 (Monotonicity) requires $\phi$ weakly increasing; Axiom 4 (Normalization) at the boundary cases requires $\phi(0) = 0$ and $\phi(1) = 1$. $\blacksquare$

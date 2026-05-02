@@ -200,6 +200,7 @@ Figure 1 depicts the pipeline through which these raw data inputs are combined. 
 ![Overview of the data engineering layer.](figures/data_engineering_layer.png)
 
 ## 4.2 Ecological Inference Layer {#sec:ei-layer}
+
 A Bayesian multinomial--Dirichlet model is adopted:
 
 $$
@@ -208,14 +209,11 @@ $$
 
 $$
 V_p \sim \text{Multinomial}(N_p, \theta_p).
-$$
-. Posterior samples are used to compute group preferences, district-level win probabilities, and uncertainty distributions.
+$$ . Posterior samples are used to compute group preferences, district-level win probabilities, and uncertainty distributions.
 
 The method Becker et al. leverage to record precinct-level probabilistic information in a condensed form is adopted here [@BeckerDuchinGoldHirsch2021].This method allows distributions to be recorded at every step of the Markov chain and involves compressing a histogram into octiles, storing only eight "bars" as opposed to "dozens of hundreds" [@BeckerDuchinGoldHirsch2021].
 
 The post-EI processing stage builds the calibration data, scores the enacted plan against labeled outcomes, and fits per-(mode, subgroup) logistic nideks tgat nao ecological inference output into district-level win probabilities.
-
-
 
 ![Overview of the ecological inference layer.](figures/ecological_inference_layer.png)
 
@@ -255,7 +253,7 @@ $$O_{\mathrm{joint}}(\pi) \;=\; \sum_{d=1}^{K} \max\!\bigl\{p_d^B(\pi),\, p_d^L(
 
 Let $\bar{m}_{g}$ denote the statewide CVAP share of group $g$ and define the diversity-calibrated minority opportunity functional as
 
-$$F_g(\pi) \;=\; O_g(\pi) - K\,\bar{m}_g$$ 
+$$F_g(\pi) \;=\; O_g(\pi) - K\,\bar{m}_g$$
 
 . Note that $F_g$ is a translation of $O_g$ that centers the demographic baseline at zero. If $F_g(\pi) < 0$, this is an indicator of minority opportunity being below proportionality.
 
@@ -273,65 +271,49 @@ Here, it is argued that the minority opportunity functional $O_{g}$ is the uniqu
 
 **Axiom 4 (Normalization):** $0 \le T(\pi) \le K$, with the bounds attained when $p^g_d(\pi) = 0$ for all $d$ and $p^g_d(\pi) = 1$ for all $d$, respectively.
 
-*Proof.* Anonymity follows because the sum is invariant under permutation
-of summands. District additivity holds with $t(d, \pi) = p^g_d(\pi)$.
-Monotonicity holds term-by-term. For normalization, $p^g_d(\pi) \in [0, 1]$
-implies $0 \le \sum_d p^g_d(\pi) \le K$, with the bounds attained at the
-stated configurations.
- 
-For the converse, Axiom 2 forces $T(\pi) = \sum_d t(d, \pi)$. The hypothesis that
-$t(d, \pi)$ depends on $\pi$ only through $p^g_d(\pi)$ writes
-$t(d, \pi) = \phi(p^g_d(\pi))$ for some $\phi$. Axiom 3 (Monotonicity) requires
-$\phi$ weakly increasing; Axiom 4 (Normalization) at the boundary cases requires
-$\phi(0) = 0$ and $\phi(1) = 1$. $\blacksquare$
- 
-The proposition narrows the choice of opportunity functional to monotone
-reweightings of win probabilities. We adopt the identity reweighting $\phi(p)
-= p$, yielding $O_g$, because (i) it has the cleanest interpretation as
-expected number of opportunity districts and (ii) any non-trivial $\phi$
-introduces additional modeling choices that obscure the connection to the
-calibrated probabilities produced in the ecological inference layer.
+*Proof.* Anonymity follows because the sum is invariant under permutation of summands. District additivity holds with $t(d, \pi) = p^g_d(\pi)$. Monotonicity holds term-by-term. For normalization, $p^g_d(\pi) \in [0, 1]$ implies $0 \le \sum_d p^g_d(\pi) \le K$, with the bounds attained at the stated configurations.
+
+For the converse, Axiom 2 forces $T(\pi) = \sum_d t(d, \pi)$. The hypothesis that $t(d, \pi)$ depends on $\pi$ only through $p^g_d(\pi)$ writes $t(d, \pi) = \phi(p^g_d(\pi))$ for some $\phi$. Axiom 3 (Monotonicity) requires $\phi$ weakly increasing; Axiom 4 (Normalization) at the boundary cases requires $\phi(0) = 0$ and $\phi(1) = 1$. $\blacksquare$
+
+The proposition narrows the choice of opportunity functional to monotone reweightings of win probabilities. We adopt the identity reweighting $\phi(p)
+= p$, yielding $O_g$, because (i) it has the cleanest interpretation as expected number of opportunity districts and (ii) any non-trivial $\phi$ introduces additional modeling choices that obscure the connection to the calibrated probabilities produced in the ecological inference layer.
 
 ### 4.3.4 The Neutral Ensemble: ReCom with Legal Constraints {#sec:neutral-ensemble}
 
-The constraint set $\mathcal{C}$ includes compactness, population balance, and county-splitting prevention. 
-
+The constraint set $\mathcal{C}$ includes compactness, population balance, and county-splitting prevention.
 
 #### 4.3.4.1 Contiguity
+
 Note that although a hard contiguity constraint was not added to the pipeline, ReCom's spanning tree mechanism guarantees that every accepted proposal is contiguous by construction [@deford2021recombination].
 
 #### 4.3.4.2 Compactness
+
 A "mathematically natural manner" for handling compactness is a discrete model is counting the number of cut edges in a district plan; note that cut edges refer to the number of edges in the the dual graph whose endpoints belong to different districts [@deford2021recombination]. This is intended to provide a discrete perimeter of the plan, as it corresponds well to informal visual standards of common district shapes [@deford2021recombination].
 
 Let $\mathrm{CE}(\pi) = |\{e \in E : \pi(u) \neq \pi(w)\ \text{for}\ e=\{u,w\}\}|$ represent the number of total cut edges in the district plan [@deford2021recombination] where $$\mathrm{CE}(\pi) \;\leq\; s_c \cdot \mathrm{CE}(\pi_0), \qquad s_c = 1.5.$$ must be satisfied.$s_{c}$ refers to the slack of the compactness.
 
-#### County-Splitting Prevention
-Furthermore, let $\mathrm{CS}(\pi)$ denote the number of counties whose precincts span two or more districts. 
+#### 4.3.4.3 County-Splitting Prevention
+
+Furthermore, let $\mathrm{CS}(\pi)$ denote the number of counties whose precincts span two or more districts.
 
 $$\mathrm{CS}(\pi) \;\leq\; s_g \cdot \mathrm{CS}(\pi_0), \qquad s_g = 1.2.$$
 
-is imposed. The slack $s_{g}$ is set to preserve the county-splitting constraint while still admitting for sufficient mobility for the chain to mix. 
+is imposed. The slack $s_{g}$ is set to preserve the county-splitting constraint while still admitting for sufficient mobility for the chain to mix.
 
 Both thresholds are scaled to $\pi_0$ rather than imposed in absolute terms, rendering $\mathcal{C}$ state-relative: the null distribution we compare $\pi_0$ against consists of plans that are no less compact and no more county-splitting than $\pi_0$ itself, scaled by the slacks.
 
+### 4.4 Besag-Clifford Exact Inference {#sec:bc}
 
-## Besag-Clifford Exact Inference {#sec:bc}
-
-Conventional ReCom analyses report tail-rank statistics from a single long chain and rely on convergence diagnostics to defend their validity [@deford2021recombination]. 
-
+Conventional ReCom analyses report tail-rank statistics from a single long chain and rely on convergence diagnostics to defend their validity [@deford2021recombination].
 
 Here, the parallel method introduced by Besag and Clifford[@besag1989generalized] - also referred to as "the hub-and-spoke sampler" [@barber2022cosufficient] - is adopted and yields exact $p$-values under $H_0$ regardless of the kernel's mixing time.
 
-Starting from the enacted plan $\pi_0$, run $P$ forward for $L_{\mathrm{hub}}$ steps to obtain a *hub* state $$X^{*} \;\sim\; P^{L_{\mathrm{hub}}}(\pi_0, \cdot).$$ From $X^{*}$, generate $M$ conditionally independent *spokes* $$Y^{(1)}, \ldots, Y^{(M)} \;\stackrel{\text{i.i.d.}}{\sim}\; P^{L_{\mathrm{spoke}}}(X^{*}, \cdot).$$ Under $H_0$ and the reversibility of $P$ with respect to $\rho_{\mathcal{C}}$, the joint law of $(\pi_0, X^{*})$ is identical to that of $(X^{*}, \pi_0)$, so $\pi_0$ given $X^{*}$ has the same distribution as each $Y^{(j)}$ given $X^{*}$. Consequently $(\pi_0, Y^{(1)}, \ldots, Y^{(M)})$ is exchangeable conditional on $X^{*}$, and the rank of any test statistic $T$ evaluated at $\pi_0$ within this $(M+1)$-tuple is uniform on $\{1, \ldots, M+1\}$.
+Let $T_0$ denote a test statistic. A hub state $X^{*}$ and independent spokes $Y \cdots Y^{M}$ are generated. Under reversibility, the set $(\pi_0, Y, \cdots, Y^{M})$ is exchangeable.
 
-The lower-tail Besag-Clifford $p$-value is therefore $$\widehat{p}_{\text{low}}(T) \;=\; \frac{\bigl|\{j : T(Y^{(j)}) \leq T(\pi_0)\}\bigr| + 1}{M + 1},
-\tag{5}$$ and satisfies $\Pr_{H_0}\bigl(\widehat{p}_{\text{low}}(T) \leq \alpha\bigr) \leq \alpha$ for every $\alpha \in \{1/(M{+}1), 2/(M{+}1), \ldots\}$. The upper-tail expression is analogous. Crucially, the argument requires only reversibility of $P$ with respect to $\rho_{\mathcal{C}}$; it places no requirement on $L_{\mathrm{hub}}$ or $L_{\mathrm{spoke}}$.
+The p-value is 
+$$p = \frac{|\{j : T(Y^{(j)}) \leq T(\pi_0)\}| + 1}{M + 1}.$$
 
-**Hyperparameter selection.** The validity of (5) is independent of $L_{\mathrm{hub}}$, $L_{\mathrm{spoke}}$, and $M$, but each affects either resolution or power.
 
-*Resolution.* The minimum attainable lower-tail $p$-value under (5) is $1/(M+1)$. We adopt $M = 1000$, giving a floor of $\approx 10^{-3}$ — the modal choice in published redistricting work [Mattingly group; MGGG case studies]. Raising $M$ to $10{,}000$ (floor $\approx 10^{-4}$) is appropriate for litigation/expert-witness contexts and is supported by the implementation without modification beyond compute.
-
-*Power.* $L_{\mathrm{hub}}$ and $L_{\mathrm{spoke}}$ govern dependence structure within the spoke ensemble. Small $L_{\mathrm{hub}}$ leaves $X^{*}$ and hence the spokes correlated with $\pi_0$, depressing power against alternatives near $\pi_0$ in the state graph; small $L_{\mathrm{spoke}}$ leaves spokes correlated with one another, inflating estimator variance for $\mathbb{E}_{\rho_{\mathcal{C}}}[O_g]$ and $\mathrm{Var}_{\rho_{\mathcal{C}}}(O_g)$. We take $L_{\mathrm{hub}} = 2000$ and $L_{\mathrm{spoke}} = 500$. The asymmetric ratio reflects that $X^{*}$ is generated once and shared across all spokes (so the unit cost of $L_{\mathrm{hub}}$ is amortized) while the per-spoke cost scales linearly in $L_{\mathrm{spoke}}$.
 
 # 5 Case Study: Texas Congressional Districts {#sec:case-study}
 
@@ -381,7 +363,9 @@ Figure 3 summarizes posterior support estimates for the three Democratic statewi
 knitr::include_graphics("figures/ei_dem_support_ranges.png")
 ```
 
-![f distributions](figures/bc_calibrated_F_distributions_TX_BC_functional.png)
+## 5.3 Ensemble Generation & Statistical Comparison Layer
+
+![O dist](figures/bc_canonical_O_distributions_TX_BC_functional.png) ![f distributions](figures/bc_calibrated_F_distributions_TX_BC_functional.png)
 
 ![O dist](figures/bc_canonical_O_distributions_TX_BC_functional.png)
 
@@ -405,6 +389,6 @@ The author, Alicia Guerra, retains copyright of her work and reserves the right 
 
 # Acknowledgements
 
-I am indebted to the SoReMo Initiative at my home institution, Illinois Institute of Technology, for funding my research. Dr. Sonja Petrović, founder of the SoReMo Initiative, has provided invaluable statistical insights. Dr. Robert Ellis, my advisor, has provided candid and thorough feedback throughout the formulation of this paper. Dr. Shahrzad (Sara) Jamshidi, my former statistical learning and Bayesian statistics professor, was instrumental in helping me get this project off the ground. And my mentor, Dr. Tianxiang Lu, provided code review since the beginning of the project.
+I am indebted to the SoReMo Initiative at my home institution, Illinois Institute of Technology, for funding my research. Dr. Sonja Petrović, founder of the SoReMo Initiative, has provided invaluable statistical insights. Dr. Robert Ellis, my advisor, has provided candid and thorough feedback throughout the formulation of this paper. Dr. Shahrzad (Sara) Jamshidi, my former statistical learning and Bayesian statistics professor, was instrumental in helping me get this project off the ground. And since I first started this project, my mentor, Dr. Tianxiang Lu, has been providing astute code reviews and guidance.
 
 # References

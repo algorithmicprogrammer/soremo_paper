@@ -272,7 +272,7 @@ That is, two plans with the same win-probability vector receive the same opportu
 The five axioms then constrain $f$:
 
 |   | Axiom | Statement | Intuition |
-|----|----|----|----|
+|------------------|------------------|------------------|------------------|
 | **A1** | Symmetry | $f$ is invariant under permutations of its arguments. | District labels carry no information; only the multiset of probabilities matters. |
 | **A2** | District Additivity | $f(p_1,\ldots,p_K) = \sum_{d=1}^{K} \phi_d(p_d)$ for some $\phi_d : [0,1] \to \mathbb{R}$. | A district's contribution does not depend on what happens in other districts. |
 | **A3** | Monotonicity | If $p_d \leq p'_d$ for all $d$, then $f(\mathbf{p}) \leq f(\mathbf{p}')$. | Higher win probabilities cannot decrease minority opportunity. |
@@ -327,15 +327,34 @@ Conventional ReCom analyses report tail-rank statistics from a single long chain
 
 Here, the parallel method introduced by Besag and Clifford[@besag1989generalized] - also referred to as "the hub-and-spoke sampler" [@barber2022cosufficient] - is adopted and yields exact $p$-values under $H_0$ regardless of the kernel's mixing time.
 
-Let $T_0$ denote a test statistic. A hub state $X^{*}$ and independent spokes $Y \cdots Y^{M}$ are generated. Under reversibility, the set $(\pi_0, Y, \cdots, Y^{M})$ is exchangeable.
-
-The p-value is $$p = \frac{|\{j : T(Y^{(j)}) \leq T(\pi_0)\}| + 1}{M + 1}.$$
+Let $K(\cdot, \cdot)$ denote a Markov kernel that is reversible with respect to the target measure $\rho_C$. The parallel construction proceeds as follows:
+ 
+1. **Reverse walk to a hub.** Starting from the data point $\pi_0$, run the chain backward (equivalently, forward, by reversibility) for $k$ steps to reach a *hub state* $X^*$.
+2. **Forward walks to spokes.** From the hub $X^*$, run $M$ independent forward chains for $k$ steps each, producing *spokes* $Y^{(1)}, Y^{(2)}, \ldots, Y^{(M)}$.
+Under reversibility of the kernel and $H_0 : \pi_0 \sim \rho_C$, the collection
+ 
+$$
+\bigl(\pi_0,\, Y^{(1)},\, Y^{(2)},\, \ldots,\, Y^{(M)}\bigr)
+$$
+ 
+is **exchangeable**. Consequently, the rank of any test statistic $T$ evaluated on $\pi_0$ within this collection is uniformly distributed on $\{1, 2, \ldots, M+1\}$ under the null.
+ 
+For a one-sided test in which small values of $T$ constitute evidence against $H_0$ (the relevant direction for $T = F_g$, where dilution corresponds to small values), the exact p-value is
+ 
+$$
+p \;=\; \frac{\bigl|\{\,j : T(Y^{(j)}) \leq T(\pi_0)\,\}\bigr| + 1}{M + 1}.
+$$
+ 
+The minimum achievable p-value, attained when $T(\pi_0)$ is strictly less than $T$ on every spoke, is $1/(M+1)$. With $M = 1000$, this resolution floor is $\approx 10^{-3}$.
+ 
+This procedure requires only reversibility of the kernel with respect to $\rho_C$; it does *not* require the chain to have mixed.
+ 
 
 # 5 Case Study: Texas Congressional Districts {#sec:case-study}
 
 ## 5.1 Data Engineering Layer Implementation {#sec:case-data}
 
-1.  Texas PLANC2333 District Plan Shapefile
+1.  Texas PLANC2333 District Plan Shapefile [@texasleg2025planc2333]
 2.  Decennial Census PL 94-171 Redistricting Dataset
 3.  Citizen Voting Age Population by Race and Ethnicity in a Special Tabulation from the ACS 5-Year Estimates
 4.  Texas Census Blocks Shapefile (TIGER/LINE)

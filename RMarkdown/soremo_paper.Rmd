@@ -181,6 +181,8 @@ The mixing time problem associated with Recombination is sidestepped altogether 
 
 # 4 The Framework {#sec:framework}
 
+![Overview of framework.](figures/redistricting_pipeline.png)
+
 ## 4.1 Data Engineering Layer {#sec:data-layer}
 
 ### 4.1.1 Data Sources {#datasources}

@@ -31,7 +31,7 @@ Redistricting refers to the periodic redrawing of geographic boundaries that def
 
 ## 1.2 The Redistricting Process in the United States
 
-Article I, Section 2 of the U.S. Constitution specifies how seats are apportioned in the House of Representatives among the states [@us_const_art1_sec2]. After the decennial U.S. census and apportionment is conducted, states usually initiate their redistricting processes, during which they formulate district boundaries accounting for population changes that occured during the past decade [@EckmanWhitaker2025MidDecade].
+Article I, Section 2 of the U.S. Constitution specifies how seats are apportioned in the House of Representatives among the states [@us_const_art1_sec2]. After the decennial U.S. census and apportionment is conducted, states usually initiate their redistricting processes, during which they formulate district boundaries accounting for population changes that occurred during the past decade [@EckmanWhitaker2025MidDecade].
 
 Although redistricting processes are mostly determined by state laws, congressional district maps are required to comply with the the U.S. Constitution and federal law [@EckmanWhitaker2025MidDecade].
 
@@ -181,6 +181,8 @@ The mixing time problem associated with Recombination is sidestepped altogether 
 
 # 4 The Framework {#sec:framework}
 
+The framework, as demonstrated in Figure 1 below, consists of three sequential layers: data engineering layer, ecological inference layer, and the ensemble generation & inference layer.
+
 ![Overview of framework.](figures/redistricting_pipeline.png)
 
 ## 4.1 Data Engineering Layer {#sec:data-layer}
@@ -205,13 +207,10 @@ Figure 1 depicts the pipeline through which these raw data inputs are combined. 
 
 A Bayesian multinomial--Dirichlet model is adopted:
 
-$$
-\theta_{p,c} = \sum_{r=1}^{R} X_{p,r} \beta_{p,r,c},
-$$
+$$\theta_{p,c} = \sum_{r=1}^{R} X_{p,r} \beta_{p,r,c},$$
 
-$$
-V_p \sim \text{Multinomial}(N_p, \theta_p).
-$$ . Posterior samples are used to compute group preferences, district-level win probabilities, and uncertainty distributions.
+$$V_p \sim \text{Multinomial}(N_p, \theta_p).$$
+. Posterior samples are used to compute group preferences, district-level win probabilities, and uncertainty distributions.
 
 The method Becker et al. leverage to record precinct-level probabilistic information in a condensed form is adopted here [@BeckerDuchinGoldHirsch2021].This method allows distributions to be recorded at every step of the Markov chain and involves compressing a histogram into octiles, storing only eight "bars" as opposed to "dozens of hundreds" [@BeckerDuchinGoldHirsch2021].
 
@@ -263,6 +262,14 @@ We adopt $F_g$ as the primary test statistic, and report $O_g$ and the ensemble-
 
 ### 4.3.3 Axiomatic Justification of the Minority Opportunity Functional
 
+|   | Axiom | Statement | Intuition |
+|----|----|----|----|
+| **A1** | Symmetry | $f$ is invariant under permutations of its arguments. | District labels carry no information; only the multiset of probabilities matters. |
+| **A2** | District Additivity | $f(p_1,\ldots,p_K) = \sum_{d=1}^{K} \phi_d(p_d)$ for some $\phi_d : [0,1] \to \mathbb{R}$. | A district's contribution does not depend on what happens in other districts. |
+| **A3** | Monotonicity | If $p_d \leq p'_d$ for all $d$, then $f(\mathbf{p}) \leq f(\mathbf{p}')$. | Higher win probabilities cannot decrease minority opportunity. |
+| **A4** | Normalization | $f(\mathbf{0}) = 0$ and $f(\mathbf{1}) = K$. | A plan that wins nowhere scores $0$; a plan that wins everywhere scores $K$. |
+| **A5** | Expected-Count Interpretation | If district outcomes are independent Bernoulli$(p_d)$, then $f(\mathbf{p})$ equals the expected number of districts in which group $g$'s preferred candidate wins. | $T(\pi)$ is interpretable as a probabilistic count of opportunity districts. |
+
 Here, it is argued that the minority opportunity functional $O_{g}$ is the unique plan functional that satisfies four natural properties for a measure of expected group electoral opportunity.
 
 **Axiom 1 (Anonymity):** For any permutation $\sigma$ of district labels $\{1, \ldots, K\}$, $T(\pi_\sigma) = T(\pi)$, where $\pi_\sigma$ is the plan obtained by relabeling districts.
@@ -273,10 +280,7 @@ Here, it is argued that the minority opportunity functional $O_{g}$ is the uniqu
 
 **Axiom 4 (Normalization):** $0 \le T(\pi) \le K$, with the bounds attained when $p^g_d(\pi) = 0$ for all $d$ and $p^g_d(\pi) = 1$ for all $d$, respectively.
 
-**Proposition.** The functional $O_g(\pi) = \sum_d p^g_d(\pi)$ satisfies
-A1–A4. Moreover, any functional satisfying A1–A4 with district contribution
-$t(d, \pi)$ depending on $\pi$ only through $p^g_d(\pi)$ takes the form
-$T(\pi) = \sum_d \phi(p^g_d(\pi))$ for some weakly increasing $\phi: [0,1]
+**Proposition.** The functional $O_g(\pi) = \sum_d p^g_d(\pi)$ satisfies A1–A4. Moreover, any functional satisfying A1–A4 with district contribution $t(d, \pi)$ depending on $\pi$ only through $p^g_d(\pi)$ takes the form $T(\pi) = \sum_d \phi(p^g_d(\pi))$ for some weakly increasing $\phi: [0,1]
 \to [0,1]$ with $\phi(0) = 0$ and $\phi(1) = 1$.
 
 *Proof.* Anonymity follows because the sum is invariant under permutation of summands. District additivity holds with $t(d, \pi) = p^g_d(\pi)$. Monotonicity holds term-by-term. For normalization, $p^g_d(\pi) \in [0, 1]$ implies $0 \le \sum_d p^g_d(\pi) \le K$, with the bounds attained at the stated configurations.
@@ -318,10 +322,7 @@ Here, the parallel method introduced by Besag and Clifford[@besag1989generalized
 
 Let $T_0$ denote a test statistic. A hub state $X^{*}$ and independent spokes $Y \cdots Y^{M}$ are generated. Under reversibility, the set $(\pi_0, Y, \cdots, Y^{M})$ is exchangeable.
 
-The p-value is 
-$$p = \frac{|\{j : T(Y^{(j)}) \leq T(\pi_0)\}| + 1}{M + 1}.$$
-
-
+The p-value is $$p = \frac{|\{j : T(Y^{(j)}) \leq T(\pi_0)\}| + 1}{M + 1}.$$
 
 # 5 Case Study: Texas Congressional Districts {#sec:case-study}
 
@@ -350,6 +351,8 @@ knitr::kable(
 ```
 
 As shown in Table 2 below, the election inventory comprises six 2024 statewide contests.
+
+Although our modeling concern is with districted elections for Congress and state elections, the analysis here is based primary on statewide contests. This is because the choices facing voters in districted elections vary across the state: in any given election year, some districts are contested,some have strong incumbents or other idiosyncraies. It ia not clear how votes for one candidate would translate to votes for a different candidate. By contrast, statewide elections allow us to make apples-to-apples comparisons across different parts of the state, since the same set of candidates competed everywhere.Ideally, we would include data for the past ten years, but this is not always possible because of data availability and precinct instability.
 
 ```{r tx-elections, echo=FALSE}
 knitr::kable(

@@ -209,8 +209,7 @@ A Bayesian multinomial--Dirichlet model is adopted:
 
 $$\theta_{p,c} = \sum_{r=1}^{R} X_{p,r} \beta_{p,r,c},$$
 
-$$V_p \sim \text{Multinomial}(N_p, \theta_p).$$
-. Posterior samples are used to compute group preferences, district-level win probabilities, and uncertainty distributions.
+$$V_p \sim \text{Multinomial}(N_p, \theta_p).$$ . Posterior samples are used to compute group preferences, district-level win probabilities, and uncertainty distributions.
 
 The method Becker et al. leverage to record precinct-level probabilistic information in a condensed form is adopted here [@BeckerDuchinGoldHirsch2021].This method allows distributions to be recorded at every step of the Markov chain and involves compressing a histogram into octiles, storing only eight "bars" as opposed to "dozens of hundreds" [@BeckerDuchinGoldHirsch2021].
 
@@ -262,6 +261,16 @@ We adopt $F_g$ as the primary test statistic, and report $O_g$ and the ensemble-
 
 ### 4.3.3 Axiomatic Justification of the Minority Opportunity Functional
 
+We seek a single number $T(\pi)$ summarizing how much electoral opportunity plan $\pi$ extends to group $g$. We start from one structural assumption and impose five substantive axioms, then show that together they single out $O_g$ uniquely.
+
+**Structural assumption.** $T(\pi)$ depends on the plan only through the vector of district-level win probabilities,
+
+$$\mathbf{p}(\pi) \;=\; \bigl(p^g_1(\pi),\, p^g_2(\pi),\, \ldots,\, p^g_K(\pi)\bigr) \;\in\; [0,1]^K.$$
+
+That is, two plans with the same win-probability vector receive the same opportunity score. We may therefore write $T(\pi) = f(\mathbf{p}(\pi))$ for some function $f : [0,1]^K \to \mathbb{R}$. The structural assumption is reasonable because the win probabilities $p^g_d(\pi)$ already encode the demographic and electoral structure of each district — they are the output of the ecological-inference layer applied to that structure — so adding demographic data as a separate input to $T$ would double-count.
+
+The five axioms then constrain $f$:
+
 |   | Axiom | Statement | Intuition |
 |----|----|----|----|
 | **A1** | Symmetry | $f$ is invariant under permutations of its arguments. | District labels carry no information; only the multiset of probabilities matters. |
@@ -270,25 +279,23 @@ We adopt $F_g$ as the primary test statistic, and report $O_g$ and the ensemble-
 | **A4** | Normalization | $f(\mathbf{0}) = 0$ and $f(\mathbf{1}) = K$. | A plan that wins nowhere scores $0$; a plan that wins everywhere scores $K$. |
 | **A5** | Expected-Count Interpretation | If district outcomes are independent Bernoulli$(p_d)$, then $f(\mathbf{p})$ equals the expected number of districts in which group $g$'s preferred candidate wins. | $T(\pi)$ is interpretable as a probabilistic count of opportunity districts. |
 
-Here, it is argued that the minority opportunity functional $O_{g}$ is the unique plan functional that satisfies four natural properties for a measure of expected group electoral opportunity.
+**Theorem.** *A function* $f : [0,1]^K \to \mathbb{R}$ satisfies A1–A5 if and only if
 
-**Axiom 1 (Anonymity):** For any permutation $\sigma$ of district labels $\{1, \ldots, K\}$, $T(\pi_\sigma) = T(\pi)$, where $\pi_\sigma$ is the plan obtained by relabeling districts.
+$$f(p_1, \ldots, p_K) \;=\; \sum_{d=1}^{K} p_d.$$
 
-**Axiom 2 (District Additivity):** $T(\pi) = \sum_{d=1}^K t(d, \pi)$, where $t(d, \pi)$ is a *district contribution* depending only on the precincts and covariates of district $d$ under $\pi$.
+*Proof.*
 
-**Axiom 3 (Monotonicity):** If $\pi$ and $\pi'$ are plans with the same district contribution function and $p^g_d(\pi) \le p^g_d(\pi')$ for every $d$, then $T(\pi) \le T(\pi')$.
+The sum $\sum_d p_d$ is plainly symmetric, additive across coordinates, weakly increasing in each $p_d$, evaluates to $0$ at $\mathbf{p} = \mathbf{0}$ and to $K$ at $\mathbf{p} = \mathbf{1}$, and equals $\mathbb{E}\!\left[\sum_d X_d\right]$ when $X_d \sim \mathrm{Bernoulli}(p_d)$ independently. So A1–A5 all hold.
 
-**Axiom 4 (Normalization):** $0 \le T(\pi) \le K$, with the bounds attained when $p^g_d(\pi) = 0$ for all $d$ and $p^g_d(\pi) = 1$ for all $d$, respectively.
+For the converse, suppose $f$ satisfies A1–A5.
 
-**Proposition.** The functional $O_g(\pi) = \sum_d p^g_d(\pi)$ satisfies A1–A4. Moreover, any functional satisfying A1–A4 with district contribution $t(d, \pi)$ depending on $\pi$ only through $p^g_d(\pi)$ takes the form $T(\pi) = \sum_d \phi(p^g_d(\pi))$ for some weakly increasing $\phi: [0,1]
-\to [0,1]$ with $\phi(0) = 0$ and $\phi(1) = 1$.
+- **A2** gives $f(\mathbf{p}) = \sum_d \phi_d(p_d)$ for some component functions $\phi_1, \ldots, \phi_K$.
+- **A1** then forces $\phi_1 = \phi_2 = \cdots = \phi_K$. Call this common function $\phi$, so $f(\mathbf{p}) = \sum_d \phi(p_d)$.
+- **A4** at $\mathbf{p} = \mathbf{0}$ gives $K\phi(0) = 0$, hence $\phi(0) = 0$; at $\mathbf{p} = \mathbf{1}$, $K\phi(1) = K$, hence $\phi(1) = 1$.
+- **A3** forces $\phi$ to be weakly increasing.
+- **A5** says $\sum_d \phi(p_d) = \sum_d p_d$ for every $\mathbf{p} \in [0,1]^K$. Setting $\mathbf{p} = (p, 0, \ldots, 0)$ and using $\phi(0) = 0$ gives $\phi(p) = p$ for every $p \in [0,1]$. Hence $f(\mathbf{p}) = \sum_d p_d$. $\blacksquare$
 
-*Proof.* Anonymity follows because the sum is invariant under permutation of summands. District additivity holds with $t(d, \pi) = p^g_d(\pi)$. Monotonicity holds term-by-term. For normalization, $p^g_d(\pi) \in [0, 1]$ implies $0 \le \sum_d p^g_d(\pi) \le K$, with the bounds attained at the stated configurations.
-
-For the converse, Axiom 2 forces $T(\pi) = \sum_d t(d, \pi)$. The hypothesis that $t(d, \pi)$ depends on $\pi$ only through $p^g_d(\pi)$ writes $t(d, \pi) = \phi(p^g_d(\pi))$ for some $\phi$. Axiom 3 (Monotonicity) requires $\phi$ weakly increasing; Axiom 4 (Normalization) at the boundary cases requires $\phi(0) = 0$ and $\phi(1) = 1$. $\blacksquare$
-
-The proposition narrows the choice of opportunity functional to monotone reweightings of win probabilities. We adopt the identity reweighting $\phi(p)
-= p$, yielding $O_g$, because (i) it has the cleanest interpretation as expected number of opportunity districts and (ii) any non-trivial $\phi$ introduces additional modeling choices that obscure the connection to the calibrated probabilities produced in the ecological inference layer.
+Each axiom does identifiable work: A2 establishes the additive-across-districts structure; A1 collapses the $K$ component functions into a single $\phi$; A3 and A4 constrain $\phi$ to be a weakly increasing map sending $0 \mapsto 0$ and $1 \mapsto 1$; A5 selects the identity $\phi(p) = p$. Dropping A5 alone leaves the family of monotone reweightings $\sum_d \phi(p^g_d)$ that effectiveness-score frameworks such as Becker et al. [2021] implicitly inhabit; our framework specializes to the cleanest case in that family.
 
 ### 4.3.4 The Neutral Ensemble: ReCom with Legal Constraints {#sec:neutral-ensemble}
 
